@@ -34,7 +34,7 @@ Resources:
       
   ComeInDeployment:
     Type: 'AWS::ApiGateway::Deployment'
-    DependsOn
+    DependsOn:
       - GetHelloWorldMethod
     Properties:
       RestApiId: !Ref ComeInRestApi
@@ -46,7 +46,7 @@ Resources:
     Properties:
       StageName: Prod
       RestApiId: !Ref ComeInRestApi
-      DeploymentId: !Ref ComeInDeployment
+      #DeploymentId: !Ref ComeInDeployment
   
   DevStage:
     Type: AWS::ApiGateway::Stage
