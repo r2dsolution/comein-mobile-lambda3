@@ -24,6 +24,27 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
+  ComeInAuthorizor:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Stage
+      Auth:
+        ComeInApiAuth:
+          Type: ApiAuth
+          Properties:
+            DefaultAuthorizer: ComeInAuthorizor
+            Authorizers:
+              ComeInAuthorizor:
+                Type: CognitoAuthorizer
+                Properties:
+                  UserPoolArn:
+                    Fn::GetAtt:
+                      - comeinmobile2-staging
+                      - Arn
+                  Identity:
+                    Header: comein_auth
+      
+
   GetHelloWorld:
     Type: AWS::Serverless::Function
     Properties:
