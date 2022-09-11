@@ -74,6 +74,13 @@ Resources:
       HttpMethod: GET
       AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        uri: 
+          Fn::GetAtt:
+          - GetHelloWorld
+          - Arn
   
   GetHelloWorld:
     Type: AWS::Serverless::Function
