@@ -57,7 +57,29 @@ Resources:
           Properties:
             Path: /test/hello
             Method: get
-
+            
+  GetHelloWorldTest2:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-GetHelloWorldTest2'
+      Handler: com.aws.codestar.projecttemplates.handler.HelloWorldHandler
+      Runtime: java11
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /test/hello2
+            Method: get
+            Auth:
+              ComeInAuth:
+                Type: ApiFunctionAuth
+                Properties:
+                  Authorizer: comein_authorizer
+            
   PostHelloWorld:
     Type: AWS::Serverless::Function
     Properties:
