@@ -31,12 +31,13 @@ Resources:
       Auth:
         DefaultAuthorizer: ComeInAuthorizor
         Authorizers:
-          UserPoolArn:
-            Fn::GetAtt:
-              - comeinmobile2-staging
-              - Arn
-          Identity:
-            Header: comein_auth
+          ComeInAuthorizor:
+            UserPoolArn:
+              Fn::GetAtt:
+                - comeinmobile2-staging
+                - Arn
+            Identity:
+              Header: comein_auth
       
 
   GetHelloWorld:
