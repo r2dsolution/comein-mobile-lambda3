@@ -27,6 +27,7 @@ Resources:
   ComeInAPI:
     Type: AWS::Serverless::Api
     Properties:
+      StageName: Prod
       Auth:
         ComeInApiAuth:
           Type: ApiAuth
