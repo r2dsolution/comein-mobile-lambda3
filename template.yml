@@ -29,20 +29,14 @@ Resources:
     Properties:
       StageName: Prod
       Auth:
-        ComeInApiAuth:
-          Type: ApiAuth
-          Properties:
-            DefaultAuthorizer: ComeInAuthorizor
-            Authorizers:
-              ComeInAuthorizor:
-                Type: CognitoAuthorizer
-                Properties:
-                  UserPoolArn:
-                    Fn::GetAtt:
-                      - comeinmobile2-staging
-                      - Arn
-                  Identity:
-                    Header: comein_auth
+        DefaultAuthorizer: ComeInAuthorizor
+        Authorizers:
+          UserPoolArn:
+            Fn::GetAtt:
+              - comeinmobile2-staging
+              - Arn
+          Identity:
+            Header: comein_auth
       
 
   GetHelloWorld:
