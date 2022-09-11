@@ -32,10 +32,7 @@ Resources:
         DefaultAuthorizer: ComeInAuthorizor
         Authorizers:
           ComeInAuthorizor:
-            UserPoolArn:
-              Fn::GetAtt:
-                - comeinmobile2-staging
-                - Arn
+            UserPoolArn: arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD
             Identity:
               Header: comein_auth
       
