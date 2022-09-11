@@ -24,102 +24,14 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
-#  ComeInAPI:
-#    Type: AWS::Serverless::Api
-#    Properties:
-#      StageName: Prod
-#      Auth:
-#        DefaultAuthorizer: ComeInAuthorizor
-#        Authorizers:
-#          ComeInAuthorizor:
-#            UserPoolArn: arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD
-#            Identity:
-#              Header: comein_auth
-              
-  ComeInAuthorizer:
-    Type: 'AWS::ApiGatewayV2::Authorizer'  
+  ComeInRestApi:
+    Type: 'AWS::ApiGateway::RestApi'
     Properties:
-      Name: comein_authorizer
-      ApiId: r550qy54tg
-      AuthorizerType: JWT
-      # AuthorizerUri:
-      JwtConfiguration:
-      #  Audience:
-        Issuer: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_sH5GQOfGD
-      IdentitySource: [ $request.header.comein_auth ]
-
-  GetHelloWorld:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-GetHelloWorld'
-      Handler: com.aws.codestar.projecttemplates.handler.HelloWorldHandler
-      Runtime: java11
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /
-            Method: get
-   
-  GetHelloWorldTest:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-GetHelloWorldTest'
-      Handler: com.aws.codestar.projecttemplates.handler.HelloWorldHandler
-      Runtime: java11
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /test/hello
-            Method: get
-            
-  GetHelloWorldTest2:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-GetHelloWorldTest2'
-      Handler: com.aws.codestar.projecttemplates.handler.HelloWorldHandler
-      Runtime: java11
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /test/hello2
-            Method: get
-            Auth:
-              ComeInAuth:
-                Type: ApiFunctionAuth
-                Properties:
-                  Authorizer: comein_authorizer
-            
-  PostHelloWorld:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-PostHelloWorld'
-      Handler: com.aws.codestar.projecttemplates.handler.HelloWorldHandler
-      Runtime: java11
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
-      Events:
-        PostEvent:
-          Type: Api
-          Properties:
-            Path: /
-            Method: post
+      Body:
+        OpenAPI specification: null
+      Description: A test API
+      Name: MyRestAPI
+    
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
