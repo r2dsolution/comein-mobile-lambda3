@@ -27,8 +27,8 @@ Resources:
   ComeInRestApi:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
-      Body:
-        OpenAPI specification: null
+      # Body:
+        # OpenAPI specification: null
       Description: A test API
       Name: MyRestAPI
     
