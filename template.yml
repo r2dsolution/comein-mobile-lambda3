@@ -24,10 +24,9 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
-  ComeInAuthorizor:
+  ComeInAPI:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: Stage
       Auth:
         ComeInApiAuth:
           Type: ApiAuth
