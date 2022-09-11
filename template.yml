@@ -24,18 +24,29 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
-  ComeInAPI:
-    Type: AWS::Serverless::Api
+#  ComeInAPI:
+#    Type: AWS::Serverless::Api
+#    Properties:
+#      StageName: Prod
+#      Auth:
+#        DefaultAuthorizer: ComeInAuthorizor
+#        Authorizers:
+#          ComeInAuthorizor:
+#            UserPoolArn: arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD
+#            Identity:
+#              Header: comein_auth
+              
+  ComeInAuthorizer:
+    Type: 'AWS::ApiGatewayV2::Authorizer'  
     Properties:
-      StageName: Prod
-      Auth:
-        DefaultAuthorizer: ComeInAuthorizor
-        Authorizers:
-          ComeInAuthorizor:
-            UserPoolArn: arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD
-            Identity:
-              Header: comein_auth
-      
+      Name: comein_authorizer
+      ApiId: r550qy54tg
+      AuthorizerType: JWT
+      # AuthorizerUri:
+      JwtConfiguration:
+        Audience:
+        Issuer: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_sH5GQOfGD
+      IdentitySource: $request.header.comein_auth
 
   GetHelloWorld:
     Type: AWS::Serverless::Function
