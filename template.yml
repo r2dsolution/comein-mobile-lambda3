@@ -71,9 +71,9 @@ Resources:
       ResourceId: !GetAtt 
         - ComeInRestApi
         - RootResourceId
-    HttpMethod: GET
-    AuthorizationType: COGNITO_USER_POOLS
-    AuthorizerId: !Ref ComeInAuthorizer
+      HttpMethod: GET
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
   
   GetHelloWorld:
     Type: AWS::Serverless::Function
