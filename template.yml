@@ -31,7 +31,16 @@ Resources:
         # OpenAPI specification: null
       Description: A test API
       Name: MyRestAPI
-    
+      
+  Authorizer:
+    Type: 'AWS::ApiGateway::Authorizer'
+    Properties:  
+      Name: ComeInAuthorizer
+      Type: COGNITO_USER_POOLS
+      RestApiId: !Ref ComeInRestApi
+      IdentitySource: method.request.header.comein_auth
+      ProviderARNs: [ 'arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD' ]
+      
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
