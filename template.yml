@@ -32,10 +32,29 @@ Resources:
       Description: A test API
       Name: MyRestAPI
       
-  Authorizer:
+  #ProdDeployment:
+    #Type: 'AWS::ApiGateway::Deployment'
+    #Properties:
+      #RestApiId: !Ref ComeInRestApi
+      #Description: My deployment
+      #StageName: DummyStage
+    
+  ProdStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: Prod
+      RestApiId: !Ref ComeInRestApi
+  
+  DevStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: Dev
+      RestApiId: !Ref ComeInRestApi
+   
+  ComeInAuthorizer:
     Type: 'AWS::ApiGateway::Authorizer'
     Properties:  
-      Name: ComeInAuthorizer
+      Name: comein_authorizer
       Type: COGNITO_USER_POOLS
       RestApiId: !Ref ComeInRestApi
       IdentitySource: method.request.header.comein_auth
