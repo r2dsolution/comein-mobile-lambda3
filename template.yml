@@ -77,7 +77,7 @@ Resources:
       Integration:
         Type: AWS
         IntegrationHttpMethod: POST
-        uri: 
+        Uri: 
           Fn::GetAtt:
           - GetHelloWorld
           - Arn
