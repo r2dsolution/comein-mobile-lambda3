@@ -46,12 +46,14 @@ Resources:
     Properties:
       StageName: Prod
       RestApiId: !Ref ComeInRestApi
+      DeploymentId: !Ref ComeInDeployment
   
   DevStage:
     Type: AWS::ApiGateway::Stage
     Properties:
       StageName: Dev
       RestApiId: !Ref ComeInRestApi
+      DeploymentId: !Ref ComeInDeployment
    
   ComeInAuthorizer:
     Type: 'AWS::ApiGateway::Authorizer'
