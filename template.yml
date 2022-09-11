@@ -41,11 +41,11 @@ Resources:
       #Description: My deployment
       #StageName: DummyStage
     
-  ProdStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      StageName: Prod
-      RestApiId: !Ref ComeInRestApi
+  #ProdStage:
+    #Type: AWS::ApiGateway::Stage
+    #Properties:
+      #StageName: Prod
+      #RestApiId: !Ref ComeInRestApi
       #DeploymentId: !Ref ComeInDeployment
   
   DevStage:
