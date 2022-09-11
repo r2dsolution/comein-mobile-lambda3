@@ -32,10 +32,12 @@ Resources:
       Description: A test API
       Name: MyRestAPI
       
-  #ProdDeployment:
-    #Type: 'AWS::ApiGateway::Deployment'
-    #Properties:
-      #RestApiId: !Ref ComeInRestApi
+  ComeInDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn
+      - GetHelloWorldMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi
       #Description: My deployment
       #StageName: DummyStage
     
@@ -59,6 +61,17 @@ Resources:
       RestApiId: !Ref ComeInRestApi
       IdentitySource: method.request.header.comein_auth
       ProviderARNs: [ 'arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD' ]
+  
+  GetHelloWorldMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+    HttpMethod: GET
+    AuthorizationType: COGNITO_USER_POOLS
+    AuthorizerId: !Ref ComeInAuthorizer
   
   GetHelloWorld:
     Type: AWS::Serverless::Function
