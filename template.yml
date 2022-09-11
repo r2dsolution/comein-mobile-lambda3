@@ -46,7 +46,7 @@ Resources:
       JwtConfiguration:
       #  Audience:
         Issuer: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_sH5GQOfGD
-      IdentitySource: $request.header.comein_auth
+      IdentitySource: [ $request.header.comein_auth ]
 
   GetHelloWorld:
     Type: AWS::Serverless::Function
