@@ -178,6 +178,10 @@ Resources:
         PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          StatusCode: 200  
+      MethodResponses:
+        StatusCode: 200         
               
   ListBookingByEmailMethod:
     Type: AWS::ApiGateway::Method
