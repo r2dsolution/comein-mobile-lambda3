@@ -95,7 +95,7 @@ Resources:
     Properties:
       RestApiId: !Ref ComeInRestApi
       #Description: My deployment
-      StageName: Dev
+      #StageName: Dev
     
   #ProdStage:
     #Type: AWS::ApiGateway::Stage
