@@ -26,7 +26,7 @@ Parameters:
          "email" : "$context.authorizer.claims.email",
          "comein_id":"$context.authorizer.claims['custom:comein_id']",
          "sub":"$context.authorizer.claims.sub"
-        }
+        },
       "params" : {
       #foreach($type in $allParams.keySet())
           #set($params = $allParams.get($type))
@@ -85,17 +85,42 @@ Resources:
         # OpenAPI specification: null
       Description: A test API
       Name: MyRestAPI
+  
+  ComeInGateWayHttpResponse:
+    Type: 'AWS::ApiGateway::Model'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ContentType: application/json
+      Description: Schema for Http Response of GateWayAPI
+      Name: GateWayHttpResponse
+      Schema: |
+        {
+          "$schema" : "http://json-schema.org/draft-04/schema#",
+          "type" : "object",
+          "required" : [ "code" ],
+          "properties" : {
+            "code" : {
+              "type" : "string"
+            }
+          },
+          "title" : "Response Schema"
+        }
+        
       
   ComeInDeployment:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
       - GetHelloWorldMethod
-      - ListBookingByEmailMethod
-      - ListBookingByEmailMethodTest
     Properties:
       RestApiId: !Ref ComeInRestApi
-      #Description: My deployment
-      #StageName: Dev
+      
+  ListBookingByEmailDeploymentTest:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ListBookingByEmailMethodTest
+    Properties:
+      RestApiId: !Ref ComeInRestApi    
+
     
   #ProdStage:
     #Type: AWS::ApiGateway::Stage
@@ -169,6 +194,15 @@ Resources:
         PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          StatusCode: 200
+     #     ResponseTemplates: 
+     #       'application/json':''
+      MethodResponses:
+        StatusCode: 200
+       # ResponseModels:
+       #   'application/json':'GateWayHttpResponse'
+        
  
   PostHelloWorldMethod:
     Type: AWS::ApiGateway::Method
