@@ -90,10 +90,12 @@ Resources:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
       - GetHelloWorldMethod
+      - ListBookingByEmailMethod
+      - ListBookingByEmailMethodTest
     Properties:
       RestApiId: !Ref ComeInRestApi
       #Description: My deployment
-      #StageName: DummyStage
+      StageName: Dev
     
   #ProdStage:
     #Type: AWS::ApiGateway::Stage
@@ -127,6 +129,31 @@ Resources:
         - RootResourceId
       PathPart: hotel-bookings
       
+  ListBookingByEmailResourceTest:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: test-hotel-bookings
+  
+  ListBookingByEmailMethodTest:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListBookingByEmailResourceTest
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByEmail.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json' : !Ref ComeInRequestTemplate
+              
   ListBookingByEmailMethod:
     Type: AWS::ApiGateway::Method
     Properties:
