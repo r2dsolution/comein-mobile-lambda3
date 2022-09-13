@@ -15,7 +15,9 @@ Parameters:
     Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
     Default: ''
   ComeInRequestTemplate:
-    'application/json': |
+    Type: String
+    Description: request-template
+    Default: |
       #set($allParams = $input.params())
       {
       "body" : $input.json('$'),
@@ -130,7 +132,8 @@ Resources:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt GetHelloWorld.Arn, '/invocations']]
-        RequestTemplates: !Ref ComeInRequestTemplate
+        RequestTemplates: 
+          'application/json' : !Ref ComeInRequestTemplate
   
   GetHelloWorldMethod:
     Type: AWS::ApiGateway::Method
