@@ -139,6 +139,7 @@ Resources:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByEmail.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
  
@@ -156,6 +157,7 @@ Resources:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt GetHelloWorld.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
   
@@ -173,6 +175,7 @@ Resources:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt GetHelloWorld.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json': |
             #set($allParams = $input.params())
