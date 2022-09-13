@@ -178,8 +178,13 @@ Resources:
         PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
-        IntegrationResponses:
-          StatusCode: 200  
+        IntegrationResponses: 
+          [ 
+            InRes:
+              Type: IntegrationResponse
+              Properties:
+                StatusCode: 200  
+          ]
       MethodResponses:
         StatusCode: 200         
               
@@ -199,7 +204,12 @@ Resources:
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
         IntegrationResponses:
-          StatusCode: 200
+          [ 
+            InRes:
+              Type: IntegrationResponse
+              Properties:
+                StatusCode: 200  
+          ]
      #     ResponseTemplates: 
      #       'application/json':''
       MethodResponses:
