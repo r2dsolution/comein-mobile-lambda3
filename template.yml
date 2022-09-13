@@ -118,6 +118,30 @@ Resources:
       IdentitySource: method.request.header.comein_auth
       ProviderARNs: [ 'arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD' ]
   
+  ListBookingByEmailResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: hotel-bookings
+      
+  ListBookingByEmailMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListBookingByEmailResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByEmail.Arn, '/invocations']]
+        RequestTemplates: 
+          'application/json' : !Ref ComeInRequestTemplate
+ 
   PostHelloWorldMethod:
     Type: AWS::ApiGateway::Method
     Properties:
