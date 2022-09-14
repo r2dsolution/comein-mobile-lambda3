@@ -147,7 +147,8 @@ Resources:
       Type: COGNITO_USER_POOLS
       RestApiId: !Ref ComeInRestApi
       IdentitySource: method.request.header.comein_auth
-      ProviderARNs: [ !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${ComeInCognitoUserPoolId} ]
+      ProviderARNs: 
+        - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${ComeInCognitoUserPoolId}
   
   ListBookingByEmailResource:
     Type: 'AWS::ApiGateway::Resource'
