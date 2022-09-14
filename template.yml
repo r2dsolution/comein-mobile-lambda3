@@ -204,16 +204,11 @@ Resources:
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
         IntegrationResponses:
-          [ 
-            InRes:
-              Type: IntegrationResponse
-              Properties:
-                StatusCode: 200  
-          ]
+          - StatusCode: 200  
      #     ResponseTemplates: 
      #       'application/json':''
       MethodResponses:
-        StatusCode: 200
+        - StatusCode: 200
        # ResponseModels:
        #   'application/json':'GateWayHttpResponse'
         
