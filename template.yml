@@ -303,7 +303,28 @@ Resources:
       Role:
         Fn::GetAtt:
         - LambdaExecutionRole
-        - Arn
+        - Arn      
+      ApiEvent:
+        Type: Api
+        Properties:
+          Method: post
+          Path: /test-hotel-bookings
+          RestApiId: 
+            Ref: !Ref ComeInRestApi
+          Auth:
+            ResourcePolicy:
+              CustomStatements: [{
+                         "Effect": Allow,
+                         "Principal": apigateway.amazonaws.com,
+                         "Action": 'lambda:InvokeFunction',
+                        # "Resource": "execute-api:/Dev/GET/pets",
+                         "Condition": {
+                           "ArnLike": {
+                             !Join ['', ['"AWS:SourceArn": "arn:aws:execute-api:', !Ref AWS::Region , ':' , ${AWS::AccountId} , ':mr6dlh581i/*/POST/test-hotel-bookings"']]
+                           }
+                         }
+                       }] 
+
   
   GetHelloWorld:
     Type: AWS::Serverless::Function
