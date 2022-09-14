@@ -179,14 +179,9 @@ Resources:
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
         IntegrationResponses: 
-          [ 
-            InRes:
-              Type: IntegrationResponse
-              Properties:
-                StatusCode: 200  
-          ]
+          - StatusCode: 200  
       MethodResponses:
-        StatusCode: 200         
+        - StatusCode: 200         
               
   ListBookingByEmailMethod:
     Type: AWS::ApiGateway::Method
