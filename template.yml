@@ -310,8 +310,7 @@ Resources:
           Properties:
               Method: post
               Path: /test-hotel-bookings
-              RestApiId: 
-                Ref: !Ref ComeInRestApi
+              RestApiId: !Ref ComeInRestApi
               Auth:
                 ResourcePolicy:
                   CustomStatements: [{
