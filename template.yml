@@ -292,6 +292,22 @@ Resources:
                 }
             }
 
+  ListBookingByEmailTestPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListBookingByEmailTest
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/Post/test-hotel-bookings
+
+  ListBookingByEmailPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListBookingByEmail
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/Post/hotel-bookings
+      
   ListBookingByEmail:
     Type: AWS::Serverless::Function
     Properties:
@@ -304,25 +320,7 @@ Resources:
         Fn::GetAtt:
         - LambdaExecutionRole
         - Arn      
-      Events: 
-        ListBookingByEmailApiEvent:
-          Type: Api
-          Properties:
-              Method: post
-              Path: /test-hotel-bookings
-              RestApiId: !Ref ComeInRestApi
-              Auth:
-                ResourcePolicy:
-                  CustomStatements: [{
-                             "Effect": "Allow",
-                             "Principal": "apigateway.amazonaws.com",
-                             "Action": "lambda:InvokeFunction",
-                             "Condition": {
-                               "ArnLike": {
-                                 "AWS:SourceArn": "arn:aws:execute-api:ap-southeast-1:091340909384:mr6dlh581i/*/POST/test-hotel-bookings"
-                               }
-                             }
-                           }]   
+      
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
