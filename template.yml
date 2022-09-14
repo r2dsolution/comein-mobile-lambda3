@@ -314,10 +314,9 @@ Resources:
           Auth:
             ResourcePolicy:
               CustomStatements: [{
-                         "Effect": Allow,
-                         "Principal": apigateway.amazonaws.com,
-                         "Action": 'lambda:InvokeFunction',
-                        # "Resource": "execute-api:/Dev/GET/pets",
+                         "Effect": "Allow",
+                         "Principal": "apigateway.amazonaws.com",
+                         "Action": "lambda:InvokeFunction",
                          "Condition": {
                            "ArnLike": {
                              "AWS:SourceArn": "arn:aws:execute-api:ap-southeast-1:091340909384:mr6dlh581i/*/POST/test-hotel-bookings"
