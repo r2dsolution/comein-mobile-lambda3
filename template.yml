@@ -304,28 +304,26 @@ Resources:
         Fn::GetAtt:
         - LambdaExecutionRole
         - Arn      
-      Events: !Ref ListBookingByEmailApiEvent
-
-
-  ListBookingByEmailApiEvent:
-    Type: AWS::Serverless::Api
-    Properties:
-        Method: post
-        Path: /test-hotel-bookings
-        RestApiId: 
-          Ref: !Ref ComeInRestApi
-        Auth:
-          ResourcePolicy:
-            CustomStatements: [{
-                       "Effect": "Allow",
-                       "Principal": "apigateway.amazonaws.com",
-                       "Action": "lambda:InvokeFunction",
-                       "Condition": {
-                         "ArnLike": {
-                           "AWS:SourceArn": "arn:aws:execute-api:ap-southeast-1:091340909384:mr6dlh581i/*/POST/test-hotel-bookings"
-                         }
-                       }
-                     }]   
+      Events: 
+        ListBookingByEmailApiEvent:
+          Type: Api
+          Properties:
+              Method: post
+              Path: /test-hotel-bookings
+              RestApiId: 
+                Ref: !Ref ComeInRestApi
+              Auth:
+                ResourcePolicy:
+                  CustomStatements: [{
+                             "Effect": "Allow",
+                             "Principal": "apigateway.amazonaws.com",
+                             "Action": "lambda:InvokeFunction",
+                             "Condition": {
+                               "ArnLike": {
+                                 "AWS:SourceArn": "arn:aws:execute-api:ap-southeast-1:091340909384:mr6dlh581i/*/POST/test-hotel-bookings"
+                               }
+                             }
+                           }]   
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
