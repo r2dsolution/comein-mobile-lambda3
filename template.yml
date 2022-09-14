@@ -320,7 +320,7 @@ Resources:
                         # "Resource": "execute-api:/Dev/GET/pets",
                          "Condition": {
                            "ArnLike": {
-                             !Join ['', ['"AWS:SourceArn": "arn:aws:execute-api:', !Ref AWS::Region , ':' , '${AWS::AccountId}' , ':mr6dlh581i/*/POST/test-hotel-bookings"']]
+                             "AWS:SourceArn": "arn:aws:execute-api:ap-southeast-1:091340909384:mr6dlh581i/*/POST/test-hotel-bookings"
                            }
                          }
                        }] 
