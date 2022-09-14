@@ -14,6 +14,10 @@ Parameters:
     Type: String
     Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
     Default: ''
+  ComeInCognitoUserPoolId:
+    Type: String
+    Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
+    Default: 'ap-southeast-1_sH5GQOfGD'
   ComeInRequestTemplate:
     Type: String
     Description: request-template
@@ -143,7 +147,7 @@ Resources:
       Type: COGNITO_USER_POOLS
       RestApiId: !Ref ComeInRestApi
       IdentitySource: method.request.header.comein_auth
-      ProviderARNs: [ 'arn:aws:cognito-idp:ap-southeast-1:091340909384:userpool/ap-southeast-1_sH5GQOfGD' ]
+      ProviderARNs: [ !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${ComeInCognitoUserPoolId} ]
   
   ListBookingByEmailResource:
     Type: 'AWS::ApiGateway::Resource'
@@ -200,12 +204,8 @@ Resources:
           'application/json' : !Ref ComeInRequestTemplate
         IntegrationResponses:
           - StatusCode: 200  
-     #     ResponseTemplates: 
-     #       'application/json':''
       MethodResponses:
         - StatusCode: 200
-       # ResponseModels:
-       #   'application/json':'GateWayHttpResponse'
         
  
   PostHelloWorldMethod:
@@ -242,55 +242,7 @@ Resources:
         Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt GetHelloWorld.Arn, '/invocations']]
         PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
-          'application/json': |
-            #set($allParams = $input.params())
-            {
-            "body" : $input.json('$'),
-            "path" : "$context.resourcePath",
-            "profile":{
-               "email" : "$context.authorizer.claims.email",
-               "comein_id":"$context.authorizer.claims['custom:comein_id']",
-               "sub":"$context.authorizer.claims.sub"
-              }
-            "params" : {
-            #foreach($type in $allParams.keySet())
-                #set($params = $allParams.get($type))
-            "$type" : {
-                #foreach($paramName in $params.keySet())
-                "$paramName" : "$util.escapeJavaScript($params.get($paramName))"
-                    #if($foreach.hasNext),#end
-                #end
-            }
-                #if($foreach.hasNext),#end
-            #end
-            },
-            "stage-variables" : {
-            #foreach($key in $stageVariables.keySet())
-            "$key" : "$util.escapeJavaScript($stageVariables.get($key))"
-                #if($foreach.hasNext),#end
-            #end
-            },
-            "context" : {
-                "account-id" : "$context.identity.accountId",
-                "api-id" : "$context.apiId",
-                "api-key" : "$context.identity.apiKey",
-                "authorizer-principal-id" : "$context.authorizer.principalId",
-                "caller" : "$context.identity.caller",
-                "cognito-authentication-provider" : "$context.identity.cognitoAuthenticationProvider",
-                "cognito-authentication-type" : "$context.identity.cognitoAuthenticationType",
-                "cognito-identity-id" : "$context.identity.cognitoIdentityId",
-                "cognito-identity-pool-id" : "$context.identity.cognitoIdentityPoolId",
-                "http-method" : "$context.httpMethod",
-                "stage" : "$context.stage",
-                "source-ip" : "$context.identity.sourceIp",
-                "user" : "$context.identity.user",
-                "user-agent" : "$context.identity.userAgent",
-                "user-arn" : "$context.identity.userArn",
-                "request-id" : "$context.requestId",
-                "resource-id" : "$context.resourceId",
-                "resource-path" : "$context.resourcePath"
-                }
-            }
+          'application/json': !Ref ComeInRequestTemplate
 
   ListBookingByEmailTestPermission:
     Type: AWS::Lambda::Permission
@@ -298,7 +250,7 @@ Resources:
       FunctionName: !Ref ListBookingByEmail
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/Post/test-hotel-bookings
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/test-hotel-bookings
 
   ListBookingByEmailPermission:
     Type: AWS::Lambda::Permission
@@ -306,7 +258,7 @@ Resources:
       FunctionName: !Ref ListBookingByEmail
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/Post/hotel-bookings
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings
       
   ListBookingByEmail:
     Type: AWS::Serverless::Function
