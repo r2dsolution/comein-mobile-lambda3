@@ -18,6 +18,10 @@ Parameters:
     Type: String
     Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
     Default: 'ap-southeast-1_sH5GQOfGD'
+  ComeInResponseTemplate:
+    Type: String
+    Description: request-template
+    Default: $input.json('$.body')
   ComeInRequestTemplate:
     Type: String
     Description: request-template
@@ -204,7 +208,9 @@ Resources:
         RequestTemplates: 
           'application/json' : !Ref ComeInRequestTemplate
         IntegrationResponses:
-          - StatusCode: 200  
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
       MethodResponses:
         - StatusCode: 200
         
