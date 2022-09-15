@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpStatus;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -11,17 +13,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class GatewayResponse {
 
-    private final String body;
-    private final Map<String, String> headers;
+    //private final String body;
+    private Map<String, Object> body = new HashMap<String,Object>();
+    private Map<String, String> headers = new HashMap<String,String>();
     private final int statusCode;
 
-    public GatewayResponse(final String body, final Map<String, String> headers, final int statusCode) {
-        this.statusCode = statusCode;
-        this.body = body;
-        this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
-    }
+   
 
-    public String getBody() {
+    public Map<String, Object> getBody() {
         return body;
     }
 
@@ -34,28 +33,24 @@ public class GatewayResponse {
     }
     
     public GatewayResponse(Map<String,Object> json_body) {
-    	 Map<String, String> headers = new HashMap<>();
-         headers.put("Content-Type", "application/json");
-        this.statusCode = 200;
-        headers.put("Content-Type", "application/json");
-        this.body = map2json(json_body);
-        this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
+    	
+    	Map<String,String> _headers = new HashMap<String,String>();
+        _headers.put("Content-Type", "application/json");
+        
+        this.headers = Collections.unmodifiableMap(new HashMap<>(_headers));
+        this.body = Collections.unmodifiableMap(new HashMap<>(json_body));
+        this.statusCode = HttpStatus.SC_OK;
+        
     }
     
-    public GatewayResponse(Map<String,Object> json_body, final Map<String, String> headers, final int statusCode) {
-        this.statusCode = statusCode;
-        headers.put("Content-Type", "application/json");
-        this.body = map2json(json_body);
-        this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
-    }
-    protected String map2json(Map<String,Object> json_body) {
-    	ObjectMapper mapper = new ObjectMapper();
-    	try {
-    		return mapper.writeValueAsString(json_body);
-    	} catch(Exception ex) {
-    		ex.printStackTrace();
-    		return "INVALID JSON";
-    	}
+    public GatewayResponse(Map<String,Object> json_body,int status) {
     	
+    	Map<String,String> _headers = new HashMap<String,String>();
+        _headers.put("Content-Type", "application/json");
+        
+        this.headers = Collections.unmodifiableMap(new HashMap<>(_headers));
+        this.body = Collections.unmodifiableMap(new HashMap<>(json_body));
+        this.statusCode = status;
+        
     }
 }

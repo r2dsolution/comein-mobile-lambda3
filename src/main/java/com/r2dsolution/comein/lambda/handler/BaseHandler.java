@@ -35,18 +35,16 @@ public abstract class BaseHandler<T extends GateWayRequest> implements RequestHa
 			
 	        Map<String,Object> output = new HashMap<String,Object>();
 	        output = doHandlerRequest(input,output,context);
-	        String json = toJson(output);
+	      //  String json = toJson(output);
 	      //  JsonNode node = toJsonNode(output);
-	        Map<String, Object> results = toJsonMap(output);
-	        log("json-result: "+json);
-	        return new GatewayResponse(results,initHeaders(),HttpStatus.SC_OK);
+//	        Map<String, Object> results = toJsonMap(output);
+	        log("json-result: "+toJson(output));
+	        return new GatewayResponse(output);
 		} catch(Exception ex) {
 			log("error: "+ex.getMessage());
-			Map<String,String> errors = new HashMap<String,String>();
-			String json_error = "{\"error\": \""+ex.getMessage()+"\"}";
+			Map<String,Object> errors = new HashMap<String,Object>();
 			errors.put("error", ex.getMessage());
-			 Map<String, Object> error_results = toJsonMap(errors);
-			return new GatewayResponse(error_results,initHeaders(),HttpStatus.SC_EXPECTATION_FAILED);
+			return new GatewayResponse(errors,HttpStatus.SC_EXPECTATION_FAILED);
 		}
 	}
 	abstract protected Map<String, Object> doHandlerRequest(T input, Map<String, Object> output,Context context) throws Exception ;
