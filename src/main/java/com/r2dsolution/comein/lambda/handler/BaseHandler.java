@@ -37,9 +37,9 @@ public abstract class BaseHandler<T extends GateWayRequest> implements RequestHa
 	        output = doHandlerRequest(input,output,context);
 	      //  String json = toJson(output);
 	      //  JsonNode node = toJsonNode(output);
-//	        Map<String, Object> results = toJsonMap(output);
+	        Map<String, Object> results = toJsonMap(output);
 	        log("json-result: "+toJson(output));
-	        return new GatewayResponse(output);
+	        return new GatewayResponse(results);
 		} catch(Exception ex) {
 			log("error: "+ex.getMessage());
 			Map<String,Object> errors = new HashMap<String,Object>();
