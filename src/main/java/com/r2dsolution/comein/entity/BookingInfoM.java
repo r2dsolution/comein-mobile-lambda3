@@ -1,6 +1,7 @@
 package com.r2dsolution.comein.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,40 +22,35 @@ public class BookingInfoM implements Serializable{
 	private Long id;
 	
 	private String bookingNo;
+	private java.sql.Date bookingDate;
 	
-	private String refName;
-	private String refName2;
-//	
-//	private String customerFullname;
-//	private String customerEmail;
-	private String targetId;
 	
-	private Date checkin;
-	private Date checkout;
 	
 	//private String email;
 	private String ownerId;
 	private String roomName;
 	private String roomDesc;
-	private int visitorAdult;
-	private int visitorChild;
+	
+	private java.sql.Date checkin;
+	private java.sql.Date checkout;
+
 	
 	AggregateReference<HotelM, Long> hotelId;
 	
-	@MappedCollection(idColumn="booking_id", keyColumn="ref_id")
-	Map<String,BookingKYCInfoM> kycInfo = new HashMap<String,BookingKYCInfoM>();
-	
-	public void addBookingKYC(BookingKYCInfoM bookKYC) {
-	//	bookKYC.setBookingId( AggregateReference.to(this.id));
-		kycInfo.put(bookKYC.getRefId(), bookKYC);
-	}
-	
-	public void removeBookingKYC(BookingKYCInfoM bookKYC) {
-		this.getKycInfo().remove(bookKYC.getRefId());
-	}
-	public void removeBookingKYC(String refId) {
-		this.getKycInfo().remove(refId);
-	}
+//	@MappedCollection(idColumn="booking_id", keyColumn="ref_id")
+//	Map<String,BookingKYCInfoM> kycInfo = new HashMap<String,BookingKYCInfoM>();
+//	
+//	public void addBookingKYC(BookingKYCInfoM bookKYC) {
+//	//	bookKYC.setBookingId( AggregateReference.to(this.id));
+//		kycInfo.put(bookKYC.getRefId(), bookKYC);
+//	}
+//	
+//	public void removeBookingKYC(BookingKYCInfoM bookKYC) {
+//		this.getKycInfo().remove(bookKYC.getRefId());
+//	}
+//	public void removeBookingKYC(String refId) {
+//		this.getKycInfo().remove(refId);
+//	}
 
 	public String getBookingNo() {
 		return bookingNo;
@@ -64,13 +60,7 @@ public class BookingInfoM implements Serializable{
 		this.bookingNo = bookingNo;
 	}
 
-//	public String getCustomerName() {
-//		return customerName;
-//	}
-//
-//	public void setCustomerName(String customerName) {
-//		this.customerName = customerName;
-//	}
+
 
 	
 //
@@ -100,28 +90,12 @@ public class BookingInfoM implements Serializable{
 		this.id = id;
 	}
 
-//	public String getCustomerFullname() {
-//		return customerFullname;
-//	}
-//
-//	public void setCustomerFullname(String customerFullname) {
-//		this.customerFullname = customerFullname;
-//	}
-
-	public Date getCheckin() {
-		return checkin;
+	public String getOwnerId() {
+		return ownerId;
 	}
 
-	public void setCheckin(Date checkin) {
-		this.checkin = checkin;
-	}
-
-	public Date getCheckout() {
-		return checkout;
-	}
-
-	public void setCheckout(Date checkout) {
-		this.checkout = checkout;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 
 	public String getRoomName() {
@@ -140,74 +114,37 @@ public class BookingInfoM implements Serializable{
 		this.roomDesc = roomDesc;
 	}
 
-	public int getVisitorAdult() {
-		return visitorAdult;
-	}
-
-	public void setVisitorAdult(int visitorAdult) {
-		this.visitorAdult = visitorAdult;
-	}
-
-	public int getVisitorChild() {
-		return visitorChild;
-	}
-
-	public void setVisitorChild(int visitorChild) {
-		this.visitorChild = visitorChild;
-	}
-
-//	public String getCustomerEmail() {
-//		return customerEmail;
-//	}
-//
-//	public void setCustomerEmail(String customerEmail) {
-//		this.customerEmail = customerEmail;
-//	}
-	
 	
 
-	public Map<String, BookingKYCInfoM> getKycInfo() {
-		return kycInfo;
+	public java.sql.Date getBookingDate() {
+		return bookingDate;
 	}
 
-	public String getTargetId() {
-		return targetId;
+	public void setBookingDate(java.sql.Date bookingDate) {
+		this.bookingDate = bookingDate;
 	}
 
-	public void setTargetId(String targetId) {
-		this.targetId = targetId;
+	public java.sql.Date getCheckin() {
+		return checkin;
 	}
 
-	public void setKycInfo(Map<String, BookingKYCInfoM> kycInfo) {
-		this.kycInfo = kycInfo;
+	public void setCheckin(java.sql.Date checkin) {
+		this.checkin = checkin;
 	}
 
-	public String getOwnerId() {
-		return ownerId;
+	public java.sql.Date getCheckout() {
+		return checkout;
 	}
 
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public String getRefName() {
-		return refName;
-	}
-
-	public void setRefName(String refName) {
-		this.refName = refName;
-	}
-
-	public String getRefName2() {
-		return refName2;
-	}
-
-	public void setRefName2(String refName2) {
-		this.refName2 = refName2;
+	public void setCheckout(java.sql.Date checkout) {
+		this.checkout = checkout;
 	}
 
 	
 
+
+
+	
 	
 	
 	

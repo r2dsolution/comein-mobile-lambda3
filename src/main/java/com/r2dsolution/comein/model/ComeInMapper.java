@@ -59,23 +59,23 @@ public class ComeInMapper {
 		b.setId(book.getId());
 		b.setBookNO(book.getBookingNo());
 		b.setHotel(map(hotel));
-		b.setRefName(book.getRefName()==null?"":book.getRefName().trim());
-		b.setRefName2(book.getRefName2()==null?"":book.getRefName2().trim());
-		//b.setCustomer(book.getCustomerFullname()==null ? "":book.getCustomerFullname());
-		
+//		b.setRefName(book.getRefName()==null?"":book.getRefName().trim());
+//		b.setRefName2(book.getRefName2()==null?"":book.getRefName2().trim());
+//
+//		
 		b.setCheckIn(book.getCheckin()==null ? "":dFormat.format(book.getCheckin()));
-		
-		
+//		
+//		
 		b.setCheckOut(book.getCheckout()==null ? "": dFormat.format(book.getCheckout()));
 		
 		b.setRoomName(book.getRoomName()==null ? "" : book.getRoomName());
 		b.setRoomDesc(book.getRoomDesc()==null ? "" : book.getRoomDesc());
-		b.setVisitorAdult(book.getVisitorAdult());
-		b.setVisitorChild(book.getVisitorChild());
+//		b.setVisitorAdult(book.getVisitorAdult());
+//		b.setVisitorChild(book.getVisitorChild());
 		//b.setCustomerEmail(book.getCustomerEmail()==null ? "": book.getCustomerEmail());
 		
-		Set<String> key = book.getKycInfo().keySet();
-		b.setCardId(new ArrayList(key));
+//		Set<String> key = book.getKycInfo().keySet();
+//		b.setCardId(new ArrayList(key));
 		
 		return b;
 	}

@@ -14,12 +14,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.r2dsolution.comein.config.ComeInConfig;
+import com.r2dsolution.comein.entity.Booking;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.model.ComeInMapper;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
+import com.r2dsolution.comein.repository.BookingRepository;
 import com.r2dsolution.comein.repository.HotelRepository;
 
 
@@ -58,6 +60,7 @@ public class ListBookingByEmailHandler extends BaseHandler<GateWayRequest>{
 			 
 			 
 			 BookingInfoRepository repo = ctx.getBean(BookingInfoRepository.class);
+//			 BookingRepository repo = ctx.getBean(BookingRepository.class);
 			 HotelRepository hotelRepo = ctx.getBean(HotelRepository.class);
 			 
 			 
@@ -71,10 +74,15 @@ public class ListBookingByEmailHandler extends BaseHandler<GateWayRequest>{
 			 
 			//List<BookingInfoM> books = repo.findByEmailOrCustomerEmail(email,email);
 			 List<BookingInfoM> books = repo.findByOwnerId(ownerId);
-			for(BookingInfoM book: books) {
+//			 List<Booking> books = repo.findByOwnerId(ownerId);
+			 log("books size: "+books.size());
+			 for(BookingInfoM book: books) {
+
+				log("book-id:"+book.getId());
 				Long hotelId = book.getHotelId().getId();
-//				doCache(hotelId,hotelRepo,HotelM.class);
-//				HotelM hotel = getCache(hotelId,HotelM.class);
+				log("hotel-id: "+hotelId);
+////				doCache(hotelId,hotelRepo,HotelM.class);
+////				HotelM hotel = getCache(hotelId,HotelM.class);
 				HotelM hotel = null;
 				Optional<HotelM> hotelOpt = hotelRepo.findById(hotelId);
 				if (hotelOpt.isPresent()) {
@@ -93,6 +101,7 @@ public class ListBookingByEmailHandler extends BaseHandler<GateWayRequest>{
 			 output.put("size", books.size());
 			 return output;
 		} catch (Exception e) {
+			e.printStackTrace();
 			log("error: "+e.getMessage());
 			throw e;
 		}
