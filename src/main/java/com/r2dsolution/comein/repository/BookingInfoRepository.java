@@ -15,6 +15,8 @@ public interface BookingInfoRepository extends CrudRepository<BookingInfoM, Long
 
 	//public List<BookingInfoM> findByEmail(String email) throws Exception;
 	public List<BookingInfoM> findByOwnerId(String comeinId) throws Exception;
+	public Optional<BookingInfoM> findByBookingNoAndOwnerId(String bookNO, String ownerId)throws Exception;
+	
 //	public List<BookingInfoM> findByRefNameAndOwnerIdIsNull(String refname) throws Exception;
 //	public List<BookingInfoM> findByRefName2(String refname)throws Exception;
 //	//public List<BookingInfoM> findByEmailOrCustomerEmail(String email,String customer_email) throws Exception;
@@ -42,6 +44,8 @@ public interface BookingInfoRepository extends CrudRepository<BookingInfoM, Long
 //	@Modifying
 //	@Query("update booking_info set ref_name2 = NULL where booking_no = :p_bookno and owner_id = :p_owner")
 //	void resetRefBookInfo( @Param("p_owner") String owner_id , @Param("p_bookno") String bookno );
+
+	
 	
 //	@Modifying
 //	@Query("update booking_info set customer_email = null, customer_fullname = :p_name where booking_no = :bookno and email = :email")

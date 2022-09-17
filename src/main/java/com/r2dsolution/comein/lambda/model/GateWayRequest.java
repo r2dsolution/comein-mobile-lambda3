@@ -56,5 +56,13 @@ public class GateWayRequest implements Serializable{
 		}
 		return null;
 	}
+	
+	public String getRequest(String name) {
+		Map<String,String> requests = (Map<String, String>) params.get("request");
+		if (requests!=null && !name.isEmpty()) {
+			return requests.get(name);
+		}
+		return null;
+	}
 
 }
