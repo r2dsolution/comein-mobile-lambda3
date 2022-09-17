@@ -28,7 +28,7 @@ public class ViewHotelBookingByBookNOHandler extends BaseHandler<GateWayRequest>
 			// 
 			
 			 //String bookNO = input.getPath("bookNO");
-			 String bookNO = input.getRequest("bookno");
+			 String bookNO = input.getQuery("bookno");
 			 //String email = input.getProfile().getEmail();
 			 String ownerId = input.getProfile().getComein_id();
 			 log(" - bookNO: "+bookNO+" ,owner-id: "+ownerId);

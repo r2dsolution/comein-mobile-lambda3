@@ -323,7 +323,13 @@ Resources:
         PassthroughBehavior: WHEN_NO_TEMPLATES
         RequestTemplates: 
           'application/json': !Ref ComeInRequestTemplate
-          
+         IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
   ViewHotelBookingByBookNODeployment:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
