@@ -37,9 +37,9 @@ public interface BookingInfoRepository extends CrudRepository<BookingInfoM, Long
 //	@Query("update booking_info set owner_id = :p_owner, ref_name2 = NULL,ref_name = COALESCE(ref_name2,ref_name) where id = :p_id")
 //	void updateBookInfoById(@Param("p_owner") String owner_id,@Param("p_id")Long id);
 //	
-//	@Modifying
-//	@Query("update booking_info set ref_name2 = :p_name where booking_no = :p_bookno and owner_id = :p_owner")
-//	void updateRefBookInfo(@Param("p_name") String ref_name, @Param("p_owner") String owner_id , @Param("p_bookno") String bookno );
+	@Modifying
+	@Query("update booking_info set ref_name2 = :p_name where booking_no = :p_bookno and owner_id = :p_owner")
+	void updateRefBookInfo(@Param("p_name") String ref_name, @Param("p_owner") String owner_id , @Param("p_bookno") String bookno );
 //	
 //	@Modifying
 //	@Query("update booking_info set ref_name2 = NULL where booking_no = :p_bookno and owner_id = :p_owner")

@@ -113,12 +113,19 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
         return new DataSourceTransactionManager(dataSource);
     }
     
-//    @Bean
-//    AWSCognitoIdentityProviderClientBuilder initAWSCognitoIdentityProviderClientBuilder() {
-//    	return AWSCognitoIdentityProviderClientBuilder.standard();
-////				.withCredentials(new ClasspathPropertiesFileCredentialsProvider("aws.properties"));
-////				 .withRegion(region);
-//    }
+    @Bean
+    AWSCognitoIdentityProviderClientBuilder initAWSCognitoIdentityProviderClientBuilder(AWSSecretsManager secretManager) {
+    	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/cognito/comein");
+    	String _accessKey = awsSecrets.get("accessKey");
+    	String _secretKey = awsSecrets.get("secretKey");
+    	String _region = awsSecrets.get("region");
+    	BasicAWSCredentials awsCreds = new BasicAWSCredentials(_accessKey,_secretKey);
+    	return AWSCognitoIdentityProviderClientBuilder.standard()
+    			.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+    			.withRegion(initRegions(_region));
+//				.withCredentials(new ClasspathPropertiesFileCredentialsProvider("aws.properties"));
+//				 .withRegion(region);
+    }
     
 //    @Bean
 //    public AWSCredentialsProvider initCredentialsProvider() {
@@ -133,7 +140,14 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     	
     	return new AWSStaticCredentialsProvider(awsCreds);
     }
-    
+
+    protected Regions initRegions(String region) {
+    	if (region!=null && region.trim().equals("ap-southeast-1")) {
+    		return Regions.AP_SOUTHEAST_1;
+    	} else {
+    		return Regions.AP_SOUTHEAST_1;
+    	}
+    }
     @Bean 
     public AWSSecretsManager initAWSSecretsManager() {
     	Regions region = Regions.AP_SOUTHEAST_1;
