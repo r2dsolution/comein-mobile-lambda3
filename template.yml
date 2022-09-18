@@ -424,7 +424,7 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/forward
       
-  ViewKYCHotelBookingResource:
+  ForwardHotelBookingResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId: !Ref ComeInRestApi
@@ -435,7 +435,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       RestApiId: !Ref ComeInRestApi
-      ResourceId: !Ref ForwardHotelBooking
+      ResourceId: !Ref ForwardHotelBookingResource
       HttpMethod: POST
       AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref ComeInAuthorizer
