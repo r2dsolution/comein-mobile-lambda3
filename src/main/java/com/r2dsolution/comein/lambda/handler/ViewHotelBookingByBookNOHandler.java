@@ -48,6 +48,7 @@ public class ViewHotelBookingByBookNOHandler extends BaseHandler<GateWayRequest>
 				  hotelBook = ComeInMapper.map(book, hotel);
 			 } 
 			output.put("result", hotelBook);
+			output.put("bookno", bookNO);
 			 
 			 return output;
 		 } catch (Exception e) {

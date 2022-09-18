@@ -95,9 +95,10 @@ public class ListBookingByEmailHandler extends BaseHandler<GateWayRequest>{
 					results.add(result);
 				}
 			}
+			 Map<String,Object> bookings = toResult("hotel-booking",results);
 			 //output.put("email", email);
 			 output.put("owner-id", ownerId);
-			 output.put("hotel-booking", results);
+			 output.put("result", bookings);
 			 output.put("size", books.size());
 			 return output;
 		} catch (Exception e) {

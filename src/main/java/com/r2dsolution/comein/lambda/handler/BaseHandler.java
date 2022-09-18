@@ -59,6 +59,11 @@ public abstract class BaseHandler<T extends GateWayRequest> implements RequestHa
 		lambdaLogger.log(message+"\n");
 	}
 	
+	protected Map<String,Object> toResult(String name,Object obj) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put(name, obj);
+		return map;
+	}
 	protected String toJson(Object obj) throws Exception {
 		return mapper.writeValueAsString(obj);
 	}
