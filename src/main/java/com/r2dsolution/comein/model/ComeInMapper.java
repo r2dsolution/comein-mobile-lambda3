@@ -59,7 +59,7 @@ public class ComeInMapper {
 		b.setId(book.getId());
 		b.setBookNO(book.getBookingNo());
 		b.setHotel(map(hotel));
-//		b.setRefName(book.getRefName()==null?"":book.getRefName().trim());
+		b.setRefName(book.getRefName()==null?"":book.getRefName().trim());
 //		b.setRefName2(book.getRefName2()==null?"":book.getRefName2().trim());
 //
 //		

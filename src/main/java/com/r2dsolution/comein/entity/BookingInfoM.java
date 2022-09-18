@@ -33,8 +33,13 @@ public class BookingInfoM implements Serializable{
 	
 	private java.sql.Date checkin;
 	private java.sql.Date checkout;
-
 	
+	private String refName;
+	private long visitorAdult;
+    private Long visitorChild;
+	
+
+
 	AggregateReference<HotelM, Long> hotelId;
 	
 //	@MappedCollection(idColumn="booking_id", keyColumn="ref_id")
@@ -142,7 +147,29 @@ public class BookingInfoM implements Serializable{
 
 	
 
+	public String getRefName() {
+		return refName;
+	}
 
+	public void setRefName(String refName) {
+		this.refName = refName;
+	}
+
+	public long getVisitorAdult() {
+		return visitorAdult;
+	}
+
+	public void setVisitorAdult(long visitorAdult) {
+		this.visitorAdult = visitorAdult;
+	}
+
+	public Long getVisitorChild() {
+		return visitorChild;
+	}
+
+	public void setVisitorChild(Long visitorChild) {
+		this.visitorChild = visitorChild;
+	}
 
 	
 	

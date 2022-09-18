@@ -279,7 +279,8 @@ Resources:
         Fn::GetAtt:
         - LambdaExecutionRole
         - Arn      
-
+        
+# Start Function - ViewHotelBookingByBookNO
   ViewHotelBookingByBookNO:
     Type: AWS::Serverless::Function
     Properties:
@@ -336,6 +337,70 @@ Resources:
       - ViewHotelBookingByBookNOMethod
     Properties:
       RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ViewHotelBookingByBookNO  
+
+# Start Function - ViewKYCHotelBooking
+  ViewKYCHotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ViewKYCHotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.ViewKYCHotelBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ViewKYCHotelBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ViewKYCHotelBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-hotel-bookings
+      
+  ViewKYCHotelBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: kyc-hotel-bookings
+      
+  ViewKYCHotelBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ViewKYCHotelBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ViewKYCHotelBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ViewKYCHotelBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ViewKYCHotelBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ViewKYCHotelBooking      
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
