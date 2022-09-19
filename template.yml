@@ -460,7 +460,76 @@ Resources:
     Properties:
       RestApiId: !Ref ComeInRestApi 
       
-# End Function - ForwardHotelBooking      
+# End Function - ForwardHotelBooking  
+
+# Start Function - AddKYCInfo
+  AddKYCInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AddKYCInfo'
+      Handler: com.r2dsolution.comein.lambda.handler.AddKYCInfoHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  AddKYCInfoPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AddKYCInfo
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-info/add
+      
+  KYCInfoResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: kyc-info
+      
+  AddKYCInfoResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref KYCInfoResource
+      PathPart: add
+      
+  AddKYCInfoMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref AddKYCInfoResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt AddKYCInfo.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  AddKYCInfoDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - AddKYCInfoMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - AddKYCInfoMethod      
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
