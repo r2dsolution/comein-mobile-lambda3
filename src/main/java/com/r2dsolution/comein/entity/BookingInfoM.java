@@ -35,6 +35,7 @@ public class BookingInfoM implements Serializable{
 	private java.sql.Date checkout;
 	
 	private String refName;
+	private String refName2;
 	private long visitorAdult;
     private Long visitorChild;
 	
@@ -169,6 +170,14 @@ public class BookingInfoM implements Serializable{
 
 	public void setVisitorChild(Long visitorChild) {
 		this.visitorChild = visitorChild;
+	}
+
+	public String getRefName2() {
+		return refName2;
+	}
+
+	public void setRefName2(String refName2) {
+		this.refName2 = refName2;
 	}
 
 	

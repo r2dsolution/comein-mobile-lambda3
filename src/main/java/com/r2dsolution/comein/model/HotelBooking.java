@@ -19,8 +19,8 @@ public class HotelBooking implements Serializable{
 	 private String refName;
 	 private String refName2;
 	 private Hotel hotel;
-	 private int visitorAdult;
-	 private int visitorChild;
+	 private long visitorAdult;
+	 private long visitorChild;
 	 private String checkIn;
 	 private String checkOut;
 	 private String roomName;
@@ -85,17 +85,17 @@ public class HotelBooking implements Serializable{
 		this.roomDesc = roomDesc;
 	}
 	@JsonProperty("visitor-adult")
-	public int getVisitorAdult() {
+	public long getVisitorAdult() {
 		return visitorAdult;
 	}
-	public void setVisitorAdult(int visitorAdult) {
+	public void setVisitorAdult(long visitorAdult) {
 		this.visitorAdult = visitorAdult;
 	}
 	@JsonProperty("visitor-child")
-	public int getVisitorChild() {
+	public long getVisitorChild() {
 		return visitorChild;
 	}
-	public void setVisitorChild(int visitorChild) {
+	public void setVisitorChild(long visitorChild) {
 		this.visitorChild = visitorChild;
 	}
 	

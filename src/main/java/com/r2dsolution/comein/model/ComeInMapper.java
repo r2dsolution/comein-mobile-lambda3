@@ -60,7 +60,7 @@ public class ComeInMapper {
 		b.setBookNO(book.getBookingNo());
 		b.setHotel(map(hotel));
 		b.setRefName(book.getRefName()==null?"":book.getRefName().trim());
-//		b.setRefName2(book.getRefName2()==null?"":book.getRefName2().trim());
+		b.setRefName2(book.getRefName2()==null?"":book.getRefName2().trim());
 //
 //		
 		b.setCheckIn(book.getCheckin()==null ? "":dFormat.format(book.getCheckin()));
@@ -70,8 +70,8 @@ public class ComeInMapper {
 		
 		b.setRoomName(book.getRoomName()==null ? "" : book.getRoomName());
 		b.setRoomDesc(book.getRoomDesc()==null ? "" : book.getRoomDesc());
-//		b.setVisitorAdult(book.getVisitorAdult());
-//		b.setVisitorChild(book.getVisitorChild());
+		b.setVisitorAdult(book.getVisitorAdult());
+		b.setVisitorChild(book.getVisitorChild());
 		//b.setCustomerEmail(book.getCustomerEmail()==null ? "": book.getCustomerEmail());
 		
 //		Set<String> key = book.getKycInfo().keySet();
