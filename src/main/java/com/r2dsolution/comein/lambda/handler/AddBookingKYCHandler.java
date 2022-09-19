@@ -16,7 +16,7 @@ public class AddBookingKYCHandler extends BaseHandler<GateWayRequest>{
 	
 
 	@Override
-	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context){
+	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context) throws Exception{
 		try {
 			String bookno = input.getQuery("bookno");
 			//String profile_email = input.getProfile().getEmail();
