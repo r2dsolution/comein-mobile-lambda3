@@ -43,20 +43,20 @@ public class BookingInfoM implements Serializable{
 
 	AggregateReference<HotelM, Long> hotelId;
 	
-//	@MappedCollection(idColumn="booking_id", keyColumn="ref_id")
-//	Map<String,BookingKYCInfoM> kycInfo = new HashMap<String,BookingKYCInfoM>();
-//	
-//	public void addBookingKYC(BookingKYCInfoM bookKYC) {
-//	//	bookKYC.setBookingId( AggregateReference.to(this.id));
-//		kycInfo.put(bookKYC.getRefId(), bookKYC);
-//	}
-//	
-//	public void removeBookingKYC(BookingKYCInfoM bookKYC) {
-//		this.getKycInfo().remove(bookKYC.getRefId());
-//	}
-//	public void removeBookingKYC(String refId) {
-//		this.getKycInfo().remove(refId);
-//	}
+	@MappedCollection(idColumn="booking_id", keyColumn="ref_id")
+	Map<String,BookingKYCInfoM> kycInfo = new HashMap<String,BookingKYCInfoM>();
+	
+	public void addBookingKYC(BookingKYCInfoM bookKYC) {
+	//	bookKYC.setBookingId( AggregateReference.to(this.id));
+		kycInfo.put(bookKYC.getRefId(), bookKYC);
+	}
+	
+	public void removeBookingKYC(BookingKYCInfoM bookKYC) {
+		this.getKycInfo().remove(bookKYC.getRefId());
+	}
+	public void removeBookingKYC(String refId) {
+		this.getKycInfo().remove(refId);
+	}
 
 	public String getBookingNo() {
 		return bookingNo;
@@ -178,6 +178,14 @@ public class BookingInfoM implements Serializable{
 
 	public void setRefName2(String refName2) {
 		this.refName2 = refName2;
+	}
+
+	public Map<String, BookingKYCInfoM> getKycInfo() {
+		return kycInfo;
+	}
+
+	public void setKycInfo(Map<String, BookingKYCInfoM> kycInfo) {
+		this.kycInfo = kycInfo;
 	}
 
 	

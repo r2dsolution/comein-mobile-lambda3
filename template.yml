@@ -529,7 +529,67 @@ Resources:
     Properties:
       RestApiId: !Ref ComeInRestApi 
       
-# End Function - AddKYCInfoMethod      
+# End Function - AddKYCInfo
+
+# Start Function - AddBookingKYC
+  AddBookingKYC:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AddBookingKYC'
+      Handler: com.r2dsolution.comein.lambda.handler.AddBookingKYCHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  AddBookingKYCPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AddBookingKYC
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/add-kyc-info
+      
+  AddBookingKYCResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: add-kyc-info
+      
+  AddBookingKYCMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref AddBookingKYCResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt AddBookingKYC.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  AddBookingKYCDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - AddBookingKYCMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - AddBookingKYC
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
