@@ -462,6 +462,66 @@ Resources:
       
 # End Function - ForwardHotelBooking  
 
+# Start Function - CancelForwardHotelBooking
+  CancelForwardHotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-CancelForwardHotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.CancelForwardHotelBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  CancelForwardHotelBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CancelForwardHotelBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/cancel-forward
+      
+  CancelForwardHotelBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: cancel-forward
+      
+  CancelForwardHotelBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref CancelForwardHotelBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt CancelForwardHotelBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  CancelForwardHotelBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - CancelForwardHotelBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - CancelForwardHotelBooking  
+
 # Start Function - AddKYCInfo
   AddKYCInfo:
     Type: AWS::Serverless::Function
