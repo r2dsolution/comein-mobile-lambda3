@@ -32,6 +32,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.r2dsolution.comein.util.RegionsUtils;
 import com.r2dsolution.comein.util.SecretManagerUtils;
 
 import java.util.Base64;
@@ -118,11 +119,11 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/cognito/comein");
     	String _accessKey = awsSecrets.get("accessKey");
     	String _secretKey = awsSecrets.get("secretKey");
-    	String _region = awsSecrets.get("region");
+    	//String _region = awsSecrets.get("region");
     	BasicAWSCredentials awsCreds = new BasicAWSCredentials(_accessKey,_secretKey);
     	return AWSCognitoIdentityProviderClientBuilder.standard()
-    			.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-    			.withRegion(initRegions(_region));
+    			.withCredentials(new AWSStaticCredentialsProvider(awsCreds));
+//    			.withRegion(RegionsUtils.initRegions(region));
 //				.withCredentials(new ClasspathPropertiesFileCredentialsProvider("aws.properties"));
 //				 .withRegion(region);
     }
@@ -141,13 +142,7 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     	return new AWSStaticCredentialsProvider(awsCreds);
     }
 
-    protected Regions initRegions(String region) {
-    	if (region!=null && region.trim().equals("ap-southeast-1")) {
-    		return Regions.AP_SOUTHEAST_1;
-    	} else {
-    		return Regions.AP_SOUTHEAST_1;
-    	}
-    }
+    
     @Bean 
     public AWSSecretsManager initAWSSecretsManager() {
     	Regions region = Regions.AP_SOUTHEAST_1;

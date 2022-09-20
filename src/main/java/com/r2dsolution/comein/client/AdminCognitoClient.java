@@ -18,6 +18,7 @@ import com.amazonaws.services.cognitoidp.model.ListUsersRequest;
 import com.amazonaws.services.cognitoidp.model.ListUsersResult;
 import com.amazonaws.services.cognitoidp.model.UserType;
 import com.r2dsolution.comein.cognito.model.CognitoUser;
+import com.r2dsolution.comein.util.RegionsUtils;
 
 @Service
 public class AdminCognitoClient {
@@ -25,8 +26,8 @@ public class AdminCognitoClient {
 	@Value( "${comein.cognito.userPoolId}" )
 	private String userPoolId;
 	
-//	@Value( "${comein.cognito.region}" )
-//	private String region2;
+	@Value( "${comein.cognito.region}" )
+	private String region;
 	
 //	@Autowired
 //	private AWSCredentialsProvider awsCredentialsProvider;
@@ -56,10 +57,11 @@ public class AdminCognitoClient {
 	public  UserType findByEmail( String email) {
 
         try {
-        	AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.build();
+        	AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.withRegion(RegionsUtils.initRegions(region)).build();
         	
         	//AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.build();
             // List all users
+        	System.out.println("userPoolId="+userPoolId);
             ListUsersRequest usersRequest = new ListUsersRequest();
         	usersRequest.withUserPoolId(userPoolId);
         	usersRequest.withFilter( "email = \""+email.trim()+"\"");
@@ -125,13 +127,13 @@ public class AdminCognitoClient {
 			 	String birthDate = user.getBirthDate();
 			 	System.out.println("title: "+title);
 			 	
-			 	AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.build();
+			 	AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.withRegion(RegionsUtils.initRegions(region)).build();
 			 
 			 	AdminCreateUserRequest req = new AdminCreateUserRequest();
 			 	req.withUserPoolId(userPoolId);
 			 	req.withUsername(email);
 			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_EMAIL,email));
-			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_ID,UUID.randomUUID().toString()));
+			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_ID,UUID.randomUUID().toString()+"_"+UUID.randomUUID().toString()));
 			 	if (!isEmpty(title)) {
 			 		req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_TITLE,title.trim()));
 			 	};
