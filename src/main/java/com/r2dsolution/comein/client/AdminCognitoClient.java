@@ -25,11 +25,11 @@ public class AdminCognitoClient {
 	@Value( "${comein.cognito.userPoolId}" )
 	private String userPoolId;
 	
-	@Value( "${comein.cognito.region}" )
-	private String region;
+//	@Value( "${comein.cognito.region}" )
+//	private String region2;
 	
-	@Autowired
-	private AWSCredentialsProvider awsCredentialsProvider;
+//	@Autowired
+//	private AWSCredentialsProvider awsCredentialsProvider;
 	
 	@Autowired
 	private AWSCognitoIdentityProviderClientBuilder cognitoClientBuilder;
@@ -46,17 +46,17 @@ public class AdminCognitoClient {
 	public static  String ATTRIBUTE_BIRTHDATE = "birthdate";
 	public static  String ATTRIBUTE_PREFERRED_USERNAME = "preferred_username";
 
-	protected AWSCognitoIdentityProvider buildProvider() {
-		AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.withCredentials(awsCredentialsProvider)
-				 .withRegion(region)
-				 .build();
-		return cognitoClient;
-	}
+//	protected AWSCognitoIdentityProvider buildProvider() {
+//		AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.withCredentials(awsCredentialsProvider)
+//				 .withRegion(region)
+//				 .build();
+//		return cognitoClient;
+//	}
 	
 	public  UserType findByEmail( String email) {
 
         try {
-        	AWSCognitoIdentityProvider cognitoClient = buildProvider();
+        	AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.build();
         	
         	//AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.build();
             // List all users
@@ -125,7 +125,7 @@ public class AdminCognitoClient {
 			 	String birthDate = user.getBirthDate();
 			 	System.out.println("title: "+title);
 			 	
-			 	AWSCognitoIdentityProvider cognitoClient = buildProvider();
+			 	AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.build();
 			 
 			 	AdminCreateUserRequest req = new AdminCreateUserRequest();
 			 	req.withUserPoolId(userPoolId);
