@@ -618,7 +618,7 @@ Resources:
     Properties:
       RestApiId: !Ref ComeInRestApi
       ParentId: !Ref KYCInfoResource
-      PathPart: add
+      PathPart: delete-kyc
       
   DeleteKYCInfoMethod:
     Type: AWS::ApiGateway::Method
