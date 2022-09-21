@@ -47,6 +47,7 @@ public class ViewKYCHotelBookingHandler extends BaseHandler<GateWayRequest>{
 				  
 			 } 
 			output.put("result", hotelBook);
+			output.put("bookno",bookNO);
 			 
 			 return output;
 		 } catch (Exception e) {

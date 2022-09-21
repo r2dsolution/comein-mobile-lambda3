@@ -21,7 +21,7 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 	
 
 	@Override
-	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context){
+	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output_json, Context context){
 		//String profile_email = input.getProfile().getEmail();
 		String ownerId = input.getProfile().getComein_id();
 		String email = (String) input.getBody().get("email");
@@ -111,7 +111,7 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 //		kycRepo.save(user);
 		
 		log("add success");
-		return output;
+		return output_json;
 	}
 
 	

@@ -47,7 +47,7 @@ public class ForwardHotelBookingHandler extends BaseHandler<GateWayRequest>{
 //		}
 		
 		
-		
+			 output.put("bookno",bookNO);
 		
 
 		return output;

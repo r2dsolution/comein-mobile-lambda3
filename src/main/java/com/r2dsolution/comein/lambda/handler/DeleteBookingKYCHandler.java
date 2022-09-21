@@ -34,7 +34,9 @@ public class DeleteBookingKYCHandler extends BaseHandler<GateWayRequest>{
 			repo.save(bookInfo);
 			log("delete success");
 			BookingInfoM result = repo.findById(bookInfo.getId()).get();
-			output.put("hotel-booking", result);
+			//output.put("hotel-booking", result);
+			output.put("result", result);
+			output.put("bookno",bookno);
 		}
 		
 		

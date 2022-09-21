@@ -35,6 +35,7 @@ public class CancelForwardHotelBookingHandler extends BaseHandler<GateWayRequest
 		 repo.resetRefBookInfo( ownerId, bookNO);
 		 
 		 log("reset-BookInfo completed");
+		 output.put("bookno",bookNO);
 
 		return output;
 	}

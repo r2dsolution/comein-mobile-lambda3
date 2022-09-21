@@ -55,7 +55,8 @@ public class DeleteKYCInfoHandler extends BaseHandler<GateWayRequest>{
 		 BookingInfoRepository repo = ctx.getBean(BookingInfoRepository.class);
 		Optional<BookingInfoM> result = repo.findByBookingNoAndOwnerId(bookno, ownerId);
 		if (result.isPresent()) {
-			output.put("hotel-booking", result.get());
+			//output.put("hotel-booking", result.get());
+			output.put("result", result.get());
 		}
 		
 		

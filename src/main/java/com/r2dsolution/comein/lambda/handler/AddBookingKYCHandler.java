@@ -48,7 +48,9 @@ public class AddBookingKYCHandler extends BaseHandler<GateWayRequest>{
 					
 					BookingInfoM result = repo.findById(bookInfo.getId()).get();
 					
-					output.put("hotel-booking",result);
+					//output.put("hotel-booking",result);
+					output.put("result",result);
+					output.put("bookno",bookno);
 				}
 			}
 			return output;
