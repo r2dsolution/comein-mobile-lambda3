@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.r2dsolution.comein.business.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.ViewKycBookingDelegate;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.BookingKYCInfoM;
 import com.r2dsolution.comein.entity.UserKYCInfoM;
@@ -48,8 +50,13 @@ public class AddBookingKYCHandler extends BaseHandler<GateWayRequest>{
 					repo.save(bookInfo);
 					log("update success");
 					
-					BookingInfoM result = repo.findById(bookInfo.getId()).get();
-					HotelBooking book = ComeInMapper.map(result, null);
+//					BookingInfoM result = repo.findById(bookInfo.getId()).get();
+//					HotelBooking book = ComeInMapper.map(result, null);
+					
+					 BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
+					 ViewKycBookingDelegate bd =  factory.initViewKycBookingDelegate(context);
+					 HotelBooking book  = bd.viewHotelBooking(bookno, comeinId);
+					
 					//output.put("hotel-booking",result);
 					output.put("result",book);
 					output.put("bookno",bookno);

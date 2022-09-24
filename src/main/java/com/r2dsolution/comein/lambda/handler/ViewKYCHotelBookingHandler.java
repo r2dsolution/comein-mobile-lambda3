@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.r2dsolution.comein.business.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.ViewKycBookingDelegate;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.entity.UserKYCInfoM;
@@ -35,17 +37,22 @@ public class ViewKYCHotelBookingHandler extends BaseHandler<GateWayRequest>{
 			 String ownerId = input.getProfile().getComein_id();
 			 log(" - bookNO: "+bookNO+" ,owner-id: "+ownerId);
 			
-			 BookingInfoRepository repo = ctx.getBean(BookingInfoRepository.class);
+//			 BookingInfoRepository repo = ctx.getBean(BookingInfoRepository.class);
+//			 
+//			// Optional<BookingInfoM> opt = repo.findByBookingNoAndEmail(bookNO, email);
+//			 Optional<BookingInfoM> opt = repo.findByBookingNoAndOwnerId(bookNO,ownerId);
+//			 HotelBooking hotelBook  = null;
+//			 if (opt.isPresent()) {
+//				 BookingInfoM book = opt.get();
+//				 log("book-no: "+book.getBookingNo()+" id: "+book.getId());
+//				 hotelBook = toJson(book);
+//				  
+//			 } 
 			 
-			// Optional<BookingInfoM> opt = repo.findByBookingNoAndEmail(bookNO, email);
-			 Optional<BookingInfoM> opt = repo.findByBookingNoAndOwnerId(bookNO,ownerId);
-			 HotelBooking hotelBook  = null;
-			 if (opt.isPresent()) {
-				 BookingInfoM book = opt.get();
-				 log("book-no: "+book.getBookingNo()+" id: "+book.getId());
-				 hotelBook = toJson(book);
-				  
-			 } 
+			 BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
+			 ViewKycBookingDelegate bd =  factory.initViewKycBookingDelegate(context);
+			 HotelBooking hotelBook  = bd.viewHotelBooking(bookNO, ownerId);
+			 
 			output.put("result", hotelBook);
 			output.put("bookno",bookNO);
 			 
@@ -58,18 +65,18 @@ public class ViewKYCHotelBookingHandler extends BaseHandler<GateWayRequest>{
 		}
 
 	
-	HotelBooking toJson(BookingInfoM book) throws Exception {
-		Long hotelId = book.getHotelId().getId();
-		 HotelRepository hotelRepo = ctx.getBean(HotelRepository.class);
-		 HotelM hotel = hotelRepo.findById(hotelId).get();
-		 HotelBooking  hotelBook = ComeInMapper.map(book, hotel);
-		  
-		  UserKYCRepository kycRepo = ctx.getBean(UserKYCRepository.class);
-		  List<UserKYCInfoM> kycList = kycRepo.findByOwnerId(book.getOwnerId());
-		  log("kycList size: "+kycList.size());
-		 hotelBook = ComeInMapper.map(hotelBook, kycList);
-		 return hotelBook;
-	}
+//	HotelBooking toJson(BookingInfoM book) throws Exception {
+//		Long hotelId = book.getHotelId().getId();
+//		 HotelRepository hotelRepo = ctx.getBean(HotelRepository.class);
+//		 HotelM hotel = hotelRepo.findById(hotelId).get();
+//		 HotelBooking  hotelBook = ComeInMapper.map(book, hotel);
+//		  
+//		  UserKYCRepository kycRepo = ctx.getBean(UserKYCRepository.class);
+//		  List<UserKYCInfoM> kycList = kycRepo.findByOwnerId(book.getOwnerId());
+//		  log("kycList size: "+kycList.size());
+//		 hotelBook = ComeInMapper.map(hotelBook, kycList);
+//		 return hotelBook;
+//	}
 	
 		 
 
