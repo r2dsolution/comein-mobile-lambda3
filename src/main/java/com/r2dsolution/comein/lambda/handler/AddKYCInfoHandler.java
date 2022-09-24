@@ -72,7 +72,7 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 //		}
 //		log("card-id: "+refId);
 //		String refId = client.getAttr(cognitoUser, AdminCognitoClient.ATTRIBUTE_COMEIN_ID);
-		String refId = client.getAttr(cognitoUser, AdminCognitoClient.ATTRIBUTE_USERNAME);		
+		String refId = cognitoUser.getUsername();
 		log("ref-id: "+refId);
 		//UserKYCInfoM user = kycRepo.findByEmailAndProfile(email, profile_email);
 		UserKYCInfoM user = null;//kycRepo.findByRefIdAndRefTypeAndOwnerId(refId, refType, ownerId);
