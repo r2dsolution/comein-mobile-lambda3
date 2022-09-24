@@ -8,6 +8,8 @@ import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.BookingKYCInfoM;
 import com.r2dsolution.comein.entity.UserKYCInfoM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
+import com.r2dsolution.comein.model.ComeInMapper;
+import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
@@ -47,9 +49,9 @@ public class AddBookingKYCHandler extends BaseHandler<GateWayRequest>{
 					log("update success");
 					
 					BookingInfoM result = repo.findById(bookInfo.getId()).get();
-					
+					HotelBooking book = ComeInMapper.map(result, null);
 					//output.put("hotel-booking",result);
-					output.put("result",result);
+					output.put("result",book);
 					output.put("bookno",bookno);
 				}
 			}
