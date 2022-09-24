@@ -1,6 +1,7 @@
 package com.r2dsolution.comein.cognito.model;
 
 public class CognitoUser {
+	private String username;
 	private String email;
 	private String title;
 	private String firstname;
@@ -67,6 +68,12 @@ public class CognitoUser {
 	}
 	public void setRefName(String refName) {
 		this.refName = refName;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	

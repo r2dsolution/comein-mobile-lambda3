@@ -2,6 +2,7 @@ package com.r2dsolution.comein.lambda.handler;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.amazonaws.services.cognitoidp.model.UserType;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -47,6 +48,7 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 		if (cognitoUser==null) {
 			log("not-found user by email: "+email);
 			CognitoUser	dataUser = new CognitoUser();
+			dataUser.setUsername(UUID.randomUUID().toString()+"@thecomein.com");
 			dataUser.setEmail(email);
 			dataUser.setTitle(title);
 			dataUser.setFirstname(firstname);

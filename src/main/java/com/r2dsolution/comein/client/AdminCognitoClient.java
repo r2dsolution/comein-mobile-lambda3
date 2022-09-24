@@ -123,6 +123,7 @@ public class AdminCognitoClient {
 			 	String cardId = user.getCardId();
 			 	String cardType = user.getCardType();
 			 	String cardExpireDate = user.getCardExpireDate();
+			 	String username = user.getUsername();
 			 	
 			 	String birthDate = user.getBirthDate();
 			 	System.out.println("title: "+title);
@@ -131,9 +132,9 @@ public class AdminCognitoClient {
 			 
 			 	AdminCreateUserRequest req = new AdminCreateUserRequest();
 			 	req.withUserPoolId(userPoolId);
-			 	req.withUsername(email);
+			 	req.withUsername(username);
 			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_EMAIL,email));
-			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_ID,UUID.randomUUID().toString()+"_"+UUID.randomUUID().toString()));
+			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_ID,"KYC-"+UUID.randomUUID().toString()));
 			 	if (!isEmpty(title)) {
 			 		req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_TITLE,title.trim()));
 			 	};
