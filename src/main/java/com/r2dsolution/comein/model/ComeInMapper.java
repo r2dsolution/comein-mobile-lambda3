@@ -81,4 +81,10 @@ public class ComeInMapper {
 		
 		return b;
 	}
+	public static HotelBooking map(HotelBooking book, Set<String> bookKycIds) {
+		
+			book.getCardId().addAll(bookKycIds);
+		
+		return book;
+	}
 }

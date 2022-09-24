@@ -48,6 +48,7 @@ public class ViewKycBookingDelegate extends BusinessDelegate{
 		
 		 HotelM hotel = hotelRepository.findById(hotelId).get();
 		 HotelBooking  hotelBook = ComeInMapper.map(book, hotel);
+		 hotelBook = ComeInMapper.map(hotelBook, book.getKycInfo().keySet());
 		  
 		 
 		  List<UserKYCInfoM> kycList = userKYCRepository.findByOwnerId(book.getOwnerId());
