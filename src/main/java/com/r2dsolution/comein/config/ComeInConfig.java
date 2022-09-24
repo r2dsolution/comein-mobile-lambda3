@@ -42,7 +42,7 @@ import java.util.HashMap;
 @Configuration
 @PropertySource("classpath:comein.properties")
 @PropertySource("classpath:aws.properties")
-@ComponentScan({ "com.r2dsolution.comein.service","com.r2dsolution.comein.client"})
+@ComponentScan({ "com.r2dsolution.comein.service","com.r2dsolution.comein.business","com.r2dsolution.comein.client"})
 @EnableJdbcRepositories("com.r2dsolution.comein.repository")
 public class ComeInConfig extends AbstractJdbcConfiguration {   
 	
