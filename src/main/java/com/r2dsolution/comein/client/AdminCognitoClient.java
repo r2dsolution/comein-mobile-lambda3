@@ -46,6 +46,7 @@ public class AdminCognitoClient {
 	public static  String ATTRIBUTE_FAMILY_NAME = "family_name";
 	public static  String ATTRIBUTE_BIRTHDATE = "birthdate";
 	public static  String ATTRIBUTE_PREFERRED_USERNAME = "preferred_username";
+	public static  String ATTRIBUTE_USERNAME = "username";
 
 //	protected AWSCognitoIdentityProvider buildProvider() {
 //		AWSCognitoIdentityProvider cognitoClient = cognitoClientBuilder.withCredentials(awsCredentialsProvider)

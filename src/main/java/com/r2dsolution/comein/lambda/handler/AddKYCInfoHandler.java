@@ -44,9 +44,9 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 		UserKYCRepository kycRepo = ctx.getBean(UserKYCRepository.class);
 		AdminCognitoClient client = ctx.getBean(AdminCognitoClient.class);
 		
-		UserType cognitoUser = client.findByEmail(email);
-		if (cognitoUser==null) {
-			log("not-found user by email: "+email);
+//		UserType cognitoUser = client.findByEmail(email);
+//		if (cognitoUser==null) {
+//			log("not-found user by email: "+email);
 			CognitoUser	dataUser = new CognitoUser();
 			dataUser.setUsername(UUID.randomUUID().toString()+"@thecomein.com");
 			dataUser.setEmail(email);
@@ -58,8 +58,8 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 			dataUser.setCardType(cardType);
 			dataUser.setBirthDate(birthdate);
 			dataUser.setCardExpireDate(cardExpireDate);
-			cognitoUser = client.addUser(dataUser);
-		}
+			UserType cognitoUser  = client.addUser(dataUser);
+	//	}
 		
 		//UserType 
 //		String refId = "";
@@ -71,7 +71,8 @@ public class AddKYCInfoHandler extends BaseHandler<GateWayRequest>{
 //			refId = cardId;
 //		}
 //		log("card-id: "+refId);
-		String refId = client.getAttr(cognitoUser, AdminCognitoClient.ATTRIBUTE_COMEIN_ID);
+//		String refId = client.getAttr(cognitoUser, AdminCognitoClient.ATTRIBUTE_COMEIN_ID);
+		String refId = client.getAttr(cognitoUser, AdminCognitoClient.ATTRIBUTE_USERNAME);		
 		log("ref-id: "+refId);
 		//UserKYCInfoM user = kycRepo.findByEmailAndProfile(email, profile_email);
 		UserKYCInfoM user = null;//kycRepo.findByRefIdAndRefTypeAndOwnerId(refId, refType, ownerId);
