@@ -14,14 +14,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.r2dsolution.comein.config.ComeInConfig;
-import com.r2dsolution.comein.entity.Booking;
+
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.model.ComeInMapper;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
-import com.r2dsolution.comein.repository.BookingRepository;
+
 import com.r2dsolution.comein.repository.HotelRepository;
 
 
