@@ -4,8 +4,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.r2dsolution.comein.business.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.ViewKycBookingDelegate;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
+import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
@@ -52,14 +55,17 @@ public class DeleteKYCInfoHandler extends BaseHandler<GateWayRequest>{
 		kycRepo.deleteKYCByRef(refId,refType,ownerId);
 		log("delete kyc-info success");
 		
-		 BookingInfoRepository repo = ctx.getBean(BookingInfoRepository.class);
-		Optional<BookingInfoM> result = repo.findByBookingNoAndOwnerId(bookno, ownerId);
-		if (result.isPresent()) {
-			//output.put("hotel-booking", result.get());
-			output.put("result", result.get());
-		}
+//		 BookingInfoRepository repo = ctx.getBean(BookingInfoRepository.class);
+//		Optional<BookingInfoM> result = repo.findByBookingNoAndOwnerId(bookno, ownerId);
+//		if (result.isPresent()) {
+//			//output.put("hotel-booking", result.get());
+//			output.put("result", result.get());
+//		}
 		
-		
+		 BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
+		 ViewKycBookingDelegate bd =  factory.initViewKycBookingDelegate(context);
+		 HotelBooking book  = bd.viewHotelBooking(bookno, ownerId);
+		 output.put("result",book);
 		
 		return output;
 	}
