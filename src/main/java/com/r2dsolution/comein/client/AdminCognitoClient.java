@@ -1,5 +1,6 @@
 package com.r2dsolution.comein.client;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -134,6 +135,7 @@ public class AdminCognitoClient {
 			 	AdminCreateUserRequest req = new AdminCreateUserRequest();
 			 	req.withUserPoolId(userPoolId);
 			 	req.withUsername(username);
+			 //	req.withDesiredDeliveryMediums(new HashSet());
 			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_EMAIL,email));
 			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_ID,"KYC-"+UUID.randomUUID().toString()));
 			 	if (!isEmpty(title)) {

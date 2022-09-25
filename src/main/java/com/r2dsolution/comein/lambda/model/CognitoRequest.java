@@ -3,6 +3,8 @@ package com.r2dsolution.comein.lambda.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.r2dsolution.comein.cognito.model.DatasetRecord;
+
 public class CognitoRequest {
 	
 	private String eventType;
@@ -10,7 +12,7 @@ public class CognitoRequest {
 	private String identityPoolId;
 	private String identityId;
 	private String datasetName;
-	private Map<String,Object> datasetRecords = new HashMap<String,Object>();
+	private Map<String,DatasetRecord> datasetRecords = new HashMap<String,DatasetRecord>();
 	public String getEventType() {
 		return eventType;
 	}
@@ -41,12 +43,13 @@ public class CognitoRequest {
 	public void setDatasetName(String datasetName) {
 		this.datasetName = datasetName;
 	}
-	public Map<String, Object> getDatasetRecords() {
+	public Map<String, DatasetRecord> getDatasetRecords() {
 		return datasetRecords;
 	}
-	public void setDatasetRecords(Map<String, Object> datasetRecords) {
+	public void setDatasetRecords(Map<String, DatasetRecord> datasetRecords) {
 		this.datasetRecords = datasetRecords;
 	}
+	
 	
 	
 

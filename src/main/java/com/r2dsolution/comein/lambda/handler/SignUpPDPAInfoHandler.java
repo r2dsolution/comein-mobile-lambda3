@@ -9,6 +9,9 @@ public class SignUpPDPAInfoHandler implements RequestHandler<CognitoRequest,Cogn
 	@Override
 	public CognitoRequest handleRequest(CognitoRequest request, Context context) {
 		context.getLogger().log("SignUp PAPD........");
+		for (String key: request.getDatasetRecords().keySet()) {
+			context.getLogger().log("SignUp PAPD -> key: "+key);
+		}
 		//context.getLogger().log("SignUp PAPD input: "+input);
 		return request;
 	}
