@@ -774,7 +774,7 @@ Resources:
 # End Function - DeleteBookingKYC
 
 # Start Function - SignUpPDPAInfo
-  AddKYCInfo:
+  SignUpPDPAInfo:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SignUpPDPAInfo'
