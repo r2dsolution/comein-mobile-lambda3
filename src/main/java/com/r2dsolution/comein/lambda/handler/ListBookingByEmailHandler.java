@@ -50,7 +50,7 @@ import com.r2dsolution.comein.repository.HotelRepository;
 //		return new GateWayResponse();
 //	}
 
-public class ListBookingByEmailHandler extends BaseHandler<GateWayRequest>{
+public class ListBookingByEmailHandler extends BaseGateWayHandler<GateWayRequest>{
 
 	@Override
 	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context) throws Exception{

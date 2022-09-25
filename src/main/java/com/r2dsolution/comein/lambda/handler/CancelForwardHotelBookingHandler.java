@@ -7,7 +7,7 @@ import com.r2dsolution.comein.client.AdminCognitoClient;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 
-public class CancelForwardHotelBookingHandler extends BaseHandler<GateWayRequest>{
+public class CancelForwardHotelBookingHandler extends BaseGateWayHandler<GateWayRequest>{
 
 	@Override
 	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context)

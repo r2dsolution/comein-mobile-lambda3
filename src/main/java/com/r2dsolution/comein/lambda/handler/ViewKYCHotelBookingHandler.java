@@ -17,7 +17,7 @@ import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.HotelRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
-public class ViewKYCHotelBookingHandler extends BaseHandler<GateWayRequest>{
+public class ViewKYCHotelBookingHandler extends BaseGateWayHandler<GateWayRequest>{
 	
 	
 

@@ -9,14 +9,21 @@ import com.amazonaws.services.lambda.runtime.Context;
 public class BusinessDelegateFactory {
 	
 	@Autowired
-	public ViewKycBookingDelegate viewKycBookingDelegate;
+	private ViewKycBookingDelegate viewKycBookingDelegate;
 	
-	
+	@Autowired
+	private SendPDPAInviteDelegate sendPDPAInviteDelegate;
 
 
 
 	public ViewKycBookingDelegate initViewKycBookingDelegate(Context ctx) {
 		viewKycBookingDelegate.initDelegate(ctx);
 		return viewKycBookingDelegate;
+	}
+	
+	public SendPDPAInviteDelegate initSendPDPAInviteDelegate(Context ctx) {
+		sendPDPAInviteDelegate.initDelegate(ctx);
+		return sendPDPAInviteDelegate;
+		
 	}
 }

@@ -17,7 +17,7 @@ import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.lambda.model.GatewayResponse;
 
-public abstract class BaseHandler<T extends GateWayRequest> implements RequestHandler<T,GatewayResponse>{
+public abstract class BaseGateWayHandler<T extends GateWayRequest> implements RequestHandler<T,GatewayResponse>{
 	
 	protected ApplicationContext ctx;
 	protected LambdaLogger lambdaLogger;

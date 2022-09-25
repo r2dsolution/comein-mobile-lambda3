@@ -12,7 +12,7 @@ import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.HotelRepository;
 
-public class ViewHotelBookingByBookNOHandler extends BaseHandler<GateWayRequest>{
+public class ViewHotelBookingByBookNOHandler extends BaseGateWayHandler<GateWayRequest>{
 	
 	
 

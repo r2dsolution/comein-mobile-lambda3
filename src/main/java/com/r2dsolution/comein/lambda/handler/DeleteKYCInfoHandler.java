@@ -12,7 +12,7 @@ import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
-public class DeleteKYCInfoHandler extends BaseHandler<GateWayRequest>{
+public class DeleteKYCInfoHandler extends BaseGateWayHandler<GateWayRequest>{
 	
 	
 

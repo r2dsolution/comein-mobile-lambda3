@@ -778,7 +778,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SignUpPrePDPAInfo'
-      Handler: com.r2dsolution.comein.lambda.handler.SignUpPDPAInfoHandler
+      Handler: com.r2dsolution.comein.lambda.handler.SignUpPrePDPAInfoHandler
       Runtime: java11
       Timeout: 30
       MemorySize: 512
