@@ -10,12 +10,12 @@ public class SignUpPDPAInfoHandler implements RequestHandler<CognitoUserPoolPreS
 	@Override
 	public CognitoUserPoolPreSignUpEvent.Response handleRequest(CognitoUserPoolPreSignUpEvent.Request request, Context context) {
 		context.getLogger().log("Start SignUp PAPD........by event");
-		CognitoUserPoolPreSignUpEvent.Response response = new CognitoUserPoolPreSignUpEvent.Response();
-		response.setAutoConfirmUser(false);
-		response.setAutoVerifyEmail(false);
-		response.setAutoVerifyPhone(false);
+//		CognitoUserPoolPreSignUpEvent.Response response = new CognitoUserPoolPreSignUpEvent.Response();
+//		response.setAutoConfirmUser(false);
+//		response.setAutoVerifyEmail(false);
+//		response.setAutoVerifyPhone(false);
 		context.getLogger().log("Finish SignUp PAPD........by event");
-		return response;
+		return null;
 	}
 
 }
