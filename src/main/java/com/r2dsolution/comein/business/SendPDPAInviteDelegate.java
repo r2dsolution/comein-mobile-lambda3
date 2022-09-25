@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.cognitoidp.model.UserType;
+import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.client.AdminCognitoClient;
+import com.r2dsolution.comein.client.SimpleQueueServiceClient;
 import com.r2dsolution.comein.entity.PDPAInviteTokenM;
+import com.r2dsolution.comein.model.EmailRequest;
 import com.r2dsolution.comein.repository.PDPAInviteTokenRepository;
 
 
@@ -24,16 +27,19 @@ public class SendPDPAInviteDelegate extends BusinessDelegate{
 	
 	@Autowired
 	private PDPAInviteTokenRepository tokenRepository;
+	
+	@Autowired
+	private SimpleQueueServiceClient client;
 
-	public void invitePDPA(String email,String secret) {
+	public void invitePDPA(String emailTo,String comeinId,String secret) {
 		//PDPAInviteRequest req = bodyToModel(message,context);
 		//String email=req.getCognito_email();
 //		String target_email = "";
 //		String ref_name = "";
 		String tokenStr = UUID.randomUUID().toString();
-		log("email: "+email);
-		if (email!=null && !email.trim().isEmpty()) {
-			log("find cognito by email: "+email);
+		log("email: "+emailTo);
+		if (emailTo!=null && !emailTo.trim().isEmpty()) {
+			log("find cognito by email: "+emailTo);
 			//UserType user = cognitoClient.findByEmail(email);
 			
 			//String comeinId = cognitoClient.getAttr(user, cognitoClient.ATTRIBUTE_COMEIN_ID);
@@ -41,7 +47,7 @@ public class SendPDPAInviteDelegate extends BusinessDelegate{
 			//ref_name = cognitoClient.getAttr(user, cognitoClient.ATTRIBUTE_REF_NAME);
 			//target_email = user.getUsername();
 		
-			Optional<PDPAInviteTokenM> opt = tokenRepository.findByComeinIdAndStatus(email,PDPAInviteTokenM.STATUS_ACTIVE);
+			Optional<PDPAInviteTokenM> opt = tokenRepository.findByComeinIdAndStatus(comeinId,PDPAInviteTokenM.STATUS_ACTIVE);
 			if (opt.isPresent()) {
 				PDPAInviteTokenM activeToken = opt.get();
 				activeToken.setStatus(PDPAInviteTokenM.STATUS_EXPIRED);
@@ -49,7 +55,7 @@ public class SendPDPAInviteDelegate extends BusinessDelegate{
 			}
 			
 			PDPAInviteTokenM token = new PDPAInviteTokenM();
-			token.setComeinId(email);
+			token.setComeinId(comeinId);
 			token.setMaxUsed(5);
 			token.setSecretCode(secret);
 			token.setToken(tokenStr);
@@ -61,6 +67,18 @@ public class SendPDPAInviteDelegate extends BusinessDelegate{
 			token.setExpireDate(new Timestamp(d.getTime()));
 			
 			tokenRepository.save(token);
+			
+			EmailRequest req = tokenToEmailRequest(emailTo,token);
+			client.sendMessage(req);
+			
 		};
+	}
+
+	private EmailRequest tokenToEmailRequest(String email,PDPAInviteTokenM token) {
+		EmailRequest req = new EmailRequest();
+		req.setEmail(email);
+		req.getParams().put("ref_name", token.getComeinId());	
+		req.getParams().put("token", token.getSecretCode());	
+		return req;
 	}
 }

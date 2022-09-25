@@ -30,6 +30,7 @@ import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.util.RegionsUtils;
@@ -112,6 +113,20 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     @Bean
     TransactionManager transactionManager(DataSource dataSource) {                     
         return new DataSourceTransactionManager(dataSource);
+    }
+    
+    @Bean
+    AmazonSQSClientBuilder intAmazonSQSClientBuilder(AWSSecretsManager secretManager) {
+    	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/sqs/comein");
+    	String accessKey = awsSecrets.get("accessKey");
+		String secretKey = awsSecrets.get("secretKey");
+		
+		
+		
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey,secretKey);
+    	
+    	return  AmazonSQSClientBuilder.standard()
+		          .withCredentials(new AWSStaticCredentialsProvider(awsCreds)) ;
     }
     
     @Bean

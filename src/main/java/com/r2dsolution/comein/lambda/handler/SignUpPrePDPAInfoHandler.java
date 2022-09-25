@@ -16,15 +16,16 @@ public class SignUpPrePDPAInfoHandler extends BaseCognitoHandler<CognitoUserPool
 
 	@Override
 	protected CognitoUserPoolPreSignUpEvent doHandleRequest(CognitoUserPoolPreSignUpEvent request,Context context) {
-		log("Start SignUp PAPD........by event");
+		log("Start SignUp PAPD........by event\n");
 		log("username: "+request.getUserName());
 		String username = request.getUserName();
 		String cardId = request.getRequest().getUserAttributes().get(AdminCognitoClient.ATTRIBUTE_COMEIN_CARD_ID);
+		String email = request.getRequest().getUserAttributes().get(AdminCognitoClient.ATTRIBUTE_EMAIL);
 		String secret = cardId.substring(cardId.length()-6);
 		
 		BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
 		SendPDPAInviteDelegate bd =	factory.initSendPDPAInviteDelegate(context);
-		bd.invitePDPA(username,secret);
+		bd.invitePDPA(email,username,secret);
 		
 		log("Finish SignUp PAPD........by event");
 		return request;
