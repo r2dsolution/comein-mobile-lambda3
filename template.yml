@@ -774,10 +774,10 @@ Resources:
 # End Function - DeleteBookingKYC
 
 # Start Function - SignUpPDPAInfo
-  SignUpPDPAInfo:
+  SignUpPrePDPAInfo:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SignUpPDPAInfo'
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SignUpPrePDPAInfo'
       Handler: com.r2dsolution.comein.lambda.handler.SignUpPDPAInfoHandler
       Runtime: java11
       Timeout: 30
