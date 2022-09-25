@@ -788,6 +788,23 @@ Resources:
         - Arn   
 
 # End Function - SignUpPDPAInfo
+
+
+# Start Function - SendEmailByTemplate
+  SendEmailByTemplate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SendEmailByTemplate'
+      Handler: com.r2dsolution.comein.lambda.handler.SendEmailByTemplateHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - SendEmailByTemplate
     
   GetHelloWorld:
     Type: AWS::Serverless::Function

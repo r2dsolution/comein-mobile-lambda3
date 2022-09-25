@@ -31,9 +31,9 @@ public class SendPDPAInviteDelegate extends BusinessDelegate{
 //		String target_email = "";
 //		String ref_name = "";
 		String tokenStr = UUID.randomUUID().toString();
-		log("email:"+email);
+		log("email: "+email);
 		if (email!=null && !email.trim().isEmpty()) {
-			log("find cognito by email"+email);
+			log("find cognito by email: "+email);
 			//UserType user = cognitoClient.findByEmail(email);
 			
 			//String comeinId = cognitoClient.getAttr(user, cognitoClient.ATTRIBUTE_COMEIN_ID);

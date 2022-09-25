@@ -6,33 +6,32 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.CognitoUserPoolEvent;
-import com.amazonaws.services.lambda.runtime.events.CognitoUserPoolPreSignUpEvent;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.r2dsolution.comein.config.ComeInConfig;
 
 
-public abstract class BaseCognitoHandler<T extends CognitoUserPoolEvent>  implements RequestHandler<T,T>{
-
+public abstract class BaseSQSHandler implements RequestHandler<SQSEvent,SQSEvent>{
+	
 	protected ApplicationContext ctx;
 	protected LambdaLogger lambdaLogger;
-	
+
 	@Override
-	public T handleRequest(T request, Context context) {
+	public SQSEvent handleRequest(SQSEvent event, Context context) {
 		try {
 			lambdaLogger = context.getLogger();
 			 
 			 ctx = new AnnotationConfigApplicationContext(ComeInConfig.class);
-			 request = doHandleRequest(request,context);
+			 event = doHandleRequest(event,context);
 			 
 		}catch(Exception ex) {
 			log(ex.getMessage());
 		}
-		return request;
+		return event;
 	}
-	
+
+	protected abstract SQSEvent doHandleRequest(SQSEvent event, Context context);
+
 	protected void log(String message) {
 		lambdaLogger.log(message);
 	}
-
-	protected abstract T doHandleRequest(T request,Context ctx);
 }

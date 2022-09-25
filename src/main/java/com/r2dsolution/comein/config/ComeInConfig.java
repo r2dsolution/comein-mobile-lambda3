@@ -115,6 +115,21 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     }
     
     @Bean
+    AmazonSimpleEmailServiceClientBuilder initAmazonSimpleEmailServiceClientBuilder(AWSSecretsManager secretManager) {
+    	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/ses/comein");
+    	String accessKey = awsSecrets.get("accessKey");
+		String secretKey = awsSecrets.get("secretKey");
+		
+		
+		
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey,secretKey);
+    	
+    	return  AmazonSimpleEmailServiceClientBuilder.standard()
+		          .withCredentials(new AWSStaticCredentialsProvider(awsCreds)) ;
+    
+    }
+    
+    @Bean
     AWSCognitoIdentityProviderClientBuilder initAWSCognitoIdentityProviderClientBuilder(AWSSecretsManager secretManager) {
     	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/cognito/comein");
     	String _accessKey = awsSecrets.get("accessKey");
