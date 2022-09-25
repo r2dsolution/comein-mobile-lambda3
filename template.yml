@@ -772,6 +772,22 @@ Resources:
       RestApiId: !Ref ComeInRestApi 
       
 # End Function - DeleteBookingKYC
+
+# Start Function - SignUpPDPAInfo
+  AddKYCInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SignUpPDPAInfo'
+      Handler: com.r2dsolution.comein.lambda.handler.SignUpPDPAInfoHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - SignUpPDPAInfo
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
