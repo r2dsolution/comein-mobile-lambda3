@@ -17,6 +17,7 @@ import com.amazonaws.services.cognitoidp.model.AdminCreateUserResult;
 import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.ListUsersRequest;
 import com.amazonaws.services.cognitoidp.model.ListUsersResult;
+import com.amazonaws.services.cognitoidp.model.MessageActionType;
 import com.amazonaws.services.cognitoidp.model.UserType;
 import com.r2dsolution.comein.cognito.model.CognitoUser;
 import com.r2dsolution.comein.util.RegionsUtils;
@@ -135,7 +136,8 @@ public class AdminCognitoClient {
 			 	AdminCreateUserRequest req = new AdminCreateUserRequest();
 			 	req.withUserPoolId(userPoolId);
 			 	req.withUsername(username);
-			 //	req.withDesiredDeliveryMediums(new HashSet());
+			 	req.withDesiredDeliveryMediums(new HashSet<String>());
+			 	req.withMessageAction(MessageActionType.SUPPRESS);
 			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_EMAIL,email));
 			 	req.withUserAttributes(newAttributeType(ATTRIBUTE_COMEIN_ID,"KYC-"+UUID.randomUUID().toString()));
 			 	if (!isEmpty(title)) {
