@@ -79,6 +79,12 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
 	@Value( "${region}" )
 	public String region;
 	
+	@Bean
+	String loginAccessToken(AWSSecretsManager secretManager) {
+		Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/api/comein/login");
+		String token = awsSecrets.get("accessToken");
+		return token;
+	}
 	
 
 	@Bean
