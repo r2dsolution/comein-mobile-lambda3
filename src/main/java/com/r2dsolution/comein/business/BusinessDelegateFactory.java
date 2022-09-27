@@ -13,6 +13,9 @@ public class BusinessDelegateFactory {
 	
 	@Autowired
 	private SendPDPAInviteDelegate sendPDPAInviteDelegate;
+	
+	@Autowired
+	private FeedOTABookingDelegate feedOTABookingDelegate;
 
 
 
@@ -24,6 +27,12 @@ public class BusinessDelegateFactory {
 	public SendPDPAInviteDelegate initSendPDPAInviteDelegate(Context ctx) {
 		sendPDPAInviteDelegate.initDelegate(ctx);
 		return sendPDPAInviteDelegate;
+		
+	}
+	
+	public FeedOTABookingDelegate initFeedOTABookingDelegate(Context ctx) {
+		feedOTABookingDelegate.initDelegate(ctx);
+		return feedOTABookingDelegate;
 		
 	}
 }

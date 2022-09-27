@@ -805,6 +805,22 @@ Resources:
         - Arn   
 
 # End Function - SendEmailByTemplate
+
+# Start Function - FeedOTABookingByDate
+  FeedOTABookingByDate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-FeedOTABookingByDate'
+      Handler: com.r2dsolution.comein.lambda.handler.FeedOTABookingByDateHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - FeedOTABookingByDate
     
   GetHelloWorld:
     Type: AWS::Serverless::Function
