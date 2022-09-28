@@ -23,6 +23,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.api.model.FeedMail;
 import com.r2dsolution.comein.api.model.FeedMessage;
 import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.model.FeedBookingRequest;
 
 @Component
 public class FeedOTABookingDelegate  extends BusinessDelegate{
@@ -40,6 +41,7 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 	
 	public FeedMail feedOTA(String dateStr) {
 		System.out.println("accessToken: "+loginAccessToken);
+		System.out.println("date: "+dateStr);
 //		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 //		
 //		Date date = cal.getTime();
@@ -66,18 +68,15 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 
 
 
-	public void sendToBookingQueue(FeedMessage m) {
-		
-		// TODO Auto-generated method stub
-		
-	}
 
 
 
-	public void sendToBookingQueue(FeedMail mail) {
+
+	public void sendToBookingQueue(String date,FeedMail mail) {
 		AmazonSQS aSQS = client.initClient();
 		for(FeedMessage m:mail.data.messages) {
-			client.sendFeedBooking(aSQS, m.json);
+			FeedBookingRequest req = new FeedBookingRequest(date,m.json);
+			client.sendFeedBooking(aSQS, req);
 		}
 		
 	}

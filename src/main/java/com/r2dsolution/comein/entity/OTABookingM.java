@@ -52,6 +52,9 @@ public class OTABookingM implements Serializable{
 	 private java.sql.Timestamp createdDate;
 	 private String status;
 
+	 
+	 private java.sql.Date feedDate;
+	 
 	public Long getId() {
 		return id;
 	}
@@ -222,6 +225,14 @@ public class OTABookingM implements Serializable{
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public java.sql.Date getFeedDate() {
+		return feedDate;
+	}
+
+	public void setFeedDate(java.sql.Date feedDate) {
+		this.feedDate = feedDate;
 	}
 
 	

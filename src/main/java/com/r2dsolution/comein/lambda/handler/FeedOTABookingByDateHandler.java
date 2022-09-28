@@ -42,7 +42,7 @@ public class FeedOTABookingByDateHandler extends BaseSQSHandler{
 			FeedMail mail = db.feedOTA(body);
 			
 				
-				db.sendToBookingQueue(mail);
+				db.sendToBookingQueue(body,mail);
 		
 		} catch(Exception ex) {
 			ex.printStackTrace();

@@ -15,6 +15,7 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.api.model.FeedBooking;
 import com.r2dsolution.comein.model.EmailRequest;
+import com.r2dsolution.comein.model.FeedBookingRequest;
 
 @Service
 public class SimpleQueueServiceClient {
@@ -53,7 +54,7 @@ public class SimpleQueueServiceClient {
 		client.sendMessage(url, message);
 	}
 	
-	public void sendFeedBooking(AmazonSQS sqlClient,FeedBooking book) {
+	public void sendFeedBooking(AmazonSQS sqlClient,FeedBookingRequest book) {
 		String url = queueUrl(sqlClient, "FeedBookingQueue");
 		sendMessage(sqlClient, url, modelToMessage(book));
 	}

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.api.model.FeedBooking;
 import com.r2dsolution.comein.entity.OTABookingM;
+import com.r2dsolution.comein.model.FeedBookingRequest;
 import com.r2dsolution.comein.repository.OTABookingRepository;
 import com.r2dsolution.comein.util.DateUtils;
 
@@ -33,13 +34,16 @@ public class AddUpdateOTABookingHandler extends BaseSQSHandler{
 
 	protected void doHandler(String body,Context context) {
 		try {
-			FeedBooking booking = map.readValue(body, FeedBooking.class);
+			FeedBookingRequest req = map.readValue(body, FeedBookingRequest.class);
 			OTABookingRepository repo = ctx.getBean(OTABookingRepository.class);
-			System.out.println("book-no: "+booking.bookingNumber);
-			Optional<OTABookingM> opt =	repo.findByBookingNumber(booking.bookingNumber);
+			
+			String bookno=req.getBooking().bookingNumber;
+			System.out.println("book-no: "+bookno);
+			Optional<OTABookingM> opt =	repo.findByBookingNumber(bookno);
 			if (!opt.isPresent()) {
-				System.out.println("save book-no: "+booking.bookingNumber);
-				OTABookingM bookM = doModel(booking);
+				System.out.println("save book-no: "+bookno);
+				OTABookingM bookM = doModel(req.getBooking());
+				bookM.setFeedDate(DateUtils.initSQLDate(req.getDate()));
 				bookM = repo.save(bookM);
 				System.out.println("save id: "+bookM.getId());
 			}
@@ -86,7 +90,7 @@ public class AddUpdateOTABookingHandler extends BaseSQSHandler{
 			entity.setRoomNight(booking.roomNight);
 		};
 		entity.setRoomType(booking.roomType);
-		entity.setStatus("MATCH");
+		entity.setStatus("UNMATCH");
 		entity.setTemplateLogic(booking.templateLogic);
 		return entity;
 	}
