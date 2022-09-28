@@ -14,6 +14,12 @@ public class FeedBookingRequest implements Serializable{
 
 	private String date;
 	private FeedBooking booking;
+	
+	
+	public FeedBookingRequest() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	public FeedBookingRequest(String date, FeedBooking json) {
 		this.date=date;
 		this.booking = json;
