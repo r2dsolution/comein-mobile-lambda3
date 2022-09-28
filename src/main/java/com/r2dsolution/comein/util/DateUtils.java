@@ -12,7 +12,11 @@ public class DateUtils {
 
 	public static java.sql.Date initSQLDate(String dateStr) {
 		Date date = initDate(dateStr,"yyyy-MM-dd");
-		return new  java.sql.Date(date.getTime());
+		if (date!=null) {
+			return new  java.sql.Date(date.getTime());
+		}else {
+			return null;
+		}
 	}
 	public static Date initDate(String dateStr,String format) {
 		
@@ -28,6 +32,10 @@ public class DateUtils {
 	}
 	public static Timestamp initTimestamp(String dateStr) {
 		Date date = initDate(dateStr,"yyyy-MM-dd HH:mm:ss");
-		return new  java.sql.Timestamp(date.getTime());
+		if (date!=null) {
+			return new  java.sql.Timestamp(date.getTime());
+		}else {
+			return null;
+		}
 	}
 }

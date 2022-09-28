@@ -57,7 +57,9 @@ public class AddUpdateOTABookingHandler extends BaseSQSHandler{
 		entity.setCheckoutDate(DateUtils.initSQLDate(booking.checkOutDate));
 		entity.setEmail(booking.email);
 		entity.setHotelName(booking.hotelName);
-		entity.setDateReceive(DateUtils.initTimestamp(booking.dateReceive));
+		if (booking.dateReceive!=null && !booking.dateReceive.trim().equals("")) {
+			entity.setDateReceive(DateUtils.initTimestamp(booking.dateReceive));
+		};
 		entity.setCreatedDate(new Timestamp(new Date().getTime()));
 		entity.setFirstName(booking.firstName);
 		entity.setLastName(booking.lastName);
