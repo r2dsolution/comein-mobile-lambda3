@@ -13,6 +13,7 @@ import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.r2dsolution.comein.api.model.FeedBooking;
 import com.r2dsolution.comein.model.EmailRequest;
 
 @Service
@@ -52,6 +53,11 @@ public class SimpleQueueServiceClient {
 		client.sendMessage(url, message);
 	}
 	
+	public void sendFeedBooking(AmazonSQS sqlClient,FeedBooking book) {
+		String url = queueUrl(sqlClient, "FeedBookingQueue");
+		sendMessage(sqlClient, url, modelToMessage(book));
+	}
+	
 	public void sendMessage(EmailRequest req) {
 		req.getParams().put("url", linkURL);
 		req.setTemplate("PDPAInvite");
@@ -60,7 +66,7 @@ public class SimpleQueueServiceClient {
 		sendMessage(sqlClient, url, modelToMessage(req));
 	}
 	
-	protected String modelToMessage(EmailRequest req){
+	protected String modelToMessage(Object req){
 		
 		try {
 			return mapper.writeValueAsString(req);

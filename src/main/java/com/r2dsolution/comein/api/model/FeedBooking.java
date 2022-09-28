@@ -1,7 +1,9 @@
 package com.r2dsolution.comein.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FeedBooking {
 	
 	 	@JsonProperty("IsBooking") 
@@ -50,7 +52,7 @@ public class FeedBooking {
 	    public int adult;
 	    
 	    @JsonProperty("Child") 
-	    public Object child;
+	    public Integer child;
 	    
 	    @JsonProperty("HotelName") 
 	    public String hotelName;

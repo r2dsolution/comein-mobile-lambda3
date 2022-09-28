@@ -821,6 +821,23 @@ Resources:
         - Arn   
 
 # End Function - FeedOTABookingByDate
+
+# Start Function - AddUpdateOTABooking
+  AddUpdateOTABooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AddUpdateOTABooking'
+      Handler: com.r2dsolution.comein.lambda.handler.AddUpdateOTABookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - AddUpdateOTABooking
+
     
   GetHelloWorld:
     Type: AWS::Serverless::Function

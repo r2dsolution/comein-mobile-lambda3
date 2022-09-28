@@ -19,7 +19,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.api.model.FeedMail;
+import com.r2dsolution.comein.api.model.FeedMessage;
+import com.r2dsolution.comein.client.SimpleQueueServiceClient;
 
 @Component
 public class FeedOTABookingDelegate  extends BusinessDelegate{
@@ -30,9 +33,12 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 	@Autowired
 	private String loginAccessToken;
 	
+	@Autowired
+	private SimpleQueueServiceClient client;
 	
 	
-	public void feedOTA(String dateStr) {
+	
+	public FeedMail feedOTA(String dateStr) {
 		System.out.println("accessToken: "+loginAccessToken);
 //		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 //		
@@ -55,6 +61,25 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 		ResponseEntity<FeedMail> result = restTemplate.exchange(endpoint+query,HttpMethod.GET,request, FeedMail.class);
 		FeedMail body = result.getBody();
 		System.out.println("message count: "+body.data.count);
+		return body;
+	}
+
+
+
+	public void sendToBookingQueue(FeedMessage m) {
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public void sendToBookingQueue(FeedMail mail) {
+		AmazonSQS aSQS = client.initClient();
+		for(FeedMessage m:mail.data.messages) {
+			client.sendFeedBooking(aSQS, m.json);
+		}
+		
 	}
 
 	
