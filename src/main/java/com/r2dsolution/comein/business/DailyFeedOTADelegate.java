@@ -17,6 +17,7 @@ public class DailyFeedOTADelegate  extends BusinessDelegate{
 	
 	public void dailyFeed() {
 		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+		cal.add(Calendar.DATE, -1);
 		System.out.println("date="+cal.getTime());
 		client.dailyFeed(cal.getTime());
 	}
