@@ -813,7 +813,7 @@ Resources:
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-FeedOTABookingByDate'
       Handler: com.r2dsolution.comein.lambda.handler.FeedOTABookingByDateHandler
       Runtime: java11
-      Timeout: 30
+      Timeout: 60
       MemorySize: 512
       Role:
         Fn::GetAtt:
@@ -837,6 +837,23 @@ Resources:
         - Arn   
 
 # End Function - AddUpdateOTABooking
+
+
+# Start Function - DailyFeedOTA
+  DailyFeedOTA:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DailyFeedOTA'
+      Handler: com.r2dsolution.comein.lambda.handler.DailyFeedOTAHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - DailyFeedOTA
 
     
   GetHelloWorld:

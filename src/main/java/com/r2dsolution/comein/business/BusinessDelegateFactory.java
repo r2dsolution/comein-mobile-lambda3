@@ -16,6 +16,9 @@ public class BusinessDelegateFactory {
 	
 	@Autowired
 	private FeedOTABookingDelegate feedOTABookingDelegate;
+	
+	@Autowired
+	private DailyFeedOTADelegate dailyFeedOTADelegate;
 
 
 
@@ -34,5 +37,10 @@ public class BusinessDelegateFactory {
 		feedOTABookingDelegate.initDelegate(ctx);
 		return feedOTABookingDelegate;
 		
+	}
+	
+	public DailyFeedOTADelegate initDailyFeedOTADelegate(Context ctx) {
+		dailyFeedOTADelegate.initDelegate(ctx);
+		return dailyFeedOTADelegate;
 	}
 }

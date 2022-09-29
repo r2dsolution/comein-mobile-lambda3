@@ -38,4 +38,9 @@ public class DateUtils {
 			return null;
 		}
 	}
+	public static String format(Date d, String format) {
+		DateFormat dFormat = new SimpleDateFormat(format,Locale.ENGLISH);
+		return dFormat.format(d);
+		
+	}
 }

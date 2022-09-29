@@ -1,5 +1,8 @@
 package com.r2dsolution.comein.client;
 
+import java.util.Date;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.api.model.FeedBooking;
 import com.r2dsolution.comein.model.EmailRequest;
 import com.r2dsolution.comein.model.FeedBookingRequest;
+import com.r2dsolution.comein.util.DateUtils;
 
 @Service
 public class SimpleQueueServiceClient {
@@ -65,6 +69,13 @@ public class SimpleQueueServiceClient {
 		AmazonSQS sqlClient =initClient();
 		String url = queueUrl(sqlClient, "SendEmailQueue");
 		sendMessage(sqlClient, url, modelToMessage(req));
+	}
+	
+	public void dailyFeed(Date d) {
+		
+		AmazonSQS sqlClient =initClient();
+		String url = queueUrl(sqlClient, "FeedOTAQueue");
+		sendMessage(sqlClient, url, DateUtils.format(d,"yyyy-MM-dd"));
 	}
 	
 	protected String modelToMessage(Object req){
