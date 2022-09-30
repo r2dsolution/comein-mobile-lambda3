@@ -30,6 +30,14 @@ public class DateUtils {
 			return null;
 		}
 	}
+	public static Date nowDate() {
+		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+		return cal.getTime();
+	}
+	public static Timestamp nowTimestamp() {
+		Date d = nowDate();
+		return new  java.sql.Timestamp(d.getTime());
+	}
 	public static Timestamp initTimestamp(String dateStr) {
 		Date date = initDate(dateStr,"yyyy-MM-dd HH:mm:ss");
 		if (date!=null) {

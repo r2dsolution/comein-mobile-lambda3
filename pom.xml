@@ -22,6 +22,7 @@
 		<aws.sdk.version>1.12.48</aws.sdk.version>
 		<aws.lambda.version>1.2.1</aws.lambda.version>
 		<aws-lambda-java-event.version>3.11.0</aws-lambda-java-event.version>
+		<io.projectreactor.version>3.4.23</io.projectreactor.version>
     </properties>
     
      <dependencyManagement>
@@ -50,6 +51,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+	            <groupId>io.projectreactor</groupId>
+	            <artifactId>reactor-bom</artifactId>
+	            <version>2020.0.23</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+            
 
 		</dependencies>
 	</dependencyManagement>
@@ -107,6 +116,12 @@
 			    <groupId>org.springframework</groupId>
 			    <artifactId>spring-web</artifactId>   
 			</dependency>
+			
+			<dependency>
+		        <groupId>io.projectreactor</groupId>
+		        <artifactId>reactor-core</artifactId> 
+		        
+		    </dependency>
 
         <dependency>
             <groupId>com.amazonaws.serverless</groupId>

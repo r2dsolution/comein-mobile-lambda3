@@ -37,7 +37,16 @@ public class BookingInfoM implements Serializable{
 	private String refName;
 	private String refName2;
 	private long visitorAdult;
-    private Long visitorChild;
+    private long visitorChild;
+    
+    private java.sql.Timestamp createdDate;
+    private String createdBy;
+    private String otaRefEmail;
+    private String otaRefContact;
+    private Long otaBookingId;
+    private Long otaCancelId;
+    private double price;
+    
 	
 
 
@@ -164,11 +173,11 @@ public class BookingInfoM implements Serializable{
 		this.visitorAdult = visitorAdult;
 	}
 
-	public Long getVisitorChild() {
+	public long getVisitorChild() {
 		return visitorChild;
 	}
 
-	public void setVisitorChild(Long visitorChild) {
+	public void setVisitorChild(long visitorChild) {
 		this.visitorChild = visitorChild;
 	}
 
@@ -188,6 +197,63 @@ public class BookingInfoM implements Serializable{
 		this.kycInfo = kycInfo;
 	}
 
+	public java.sql.Timestamp getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(java.sql.Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getOtaRefEmail() {
+		return otaRefEmail;
+	}
+
+	public void setOtaRefEmail(String otaRefEmail) {
+		this.otaRefEmail = otaRefEmail;
+	}
+
+	public Long getOtaBookingId() {
+		return otaBookingId;
+	}
+
+	public void setOtaBookingId(Long otaBookingId) {
+		this.otaBookingId = otaBookingId;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getOtaRefContact() {
+		return otaRefContact;
+	}
+
+	public void setOtaRefContact(String otaRefContact) {
+		this.otaRefContact = otaRefContact;
+	}
+
+	public Long getOtaCancelId() {
+		return otaCancelId;
+	}
+
+	public void setOtaCancelId(Long otaCancelId) {
+		this.otaCancelId = otaCancelId;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	
 	
 	
 	

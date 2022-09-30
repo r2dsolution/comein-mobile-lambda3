@@ -72,14 +72,14 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 
 
 
-	public void sendToBookingQueue(String date,FeedMail mail) {
-		AmazonSQS aSQS = client.initClient();
-		for(FeedMessage m:mail.data.messages) {
-			FeedBookingRequest req = new FeedBookingRequest(date,m.json);
-			client.sendFeedBooking(aSQS, req);
-		}
-		
-	}
+//	public void sendToBookingQueue(String date,FeedMail mail) {
+//		AmazonSQS aSQS = client.initClient();
+//		for(FeedMessage m:mail.data.messages) {
+//			FeedBookingRequest req = new FeedBookingRequest(date,m.json);
+//			client.sendFeedBooking(aSQS, req);
+//		}
+//		
+//	}
 
 	
 

@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.api.model.FeedBooking;
 import com.r2dsolution.comein.model.EmailRequest;
 import com.r2dsolution.comein.model.FeedBookingRequest;
+import com.r2dsolution.comein.model.HotelBooking;
+import com.r2dsolution.comein.model.HotelBookingRequest;
 import com.r2dsolution.comein.util.DateUtils;
 
 @Service
@@ -57,13 +59,32 @@ public class SimpleQueueServiceClient {
 		
 		client.sendMessage(url, message);
 	}
-	
-	public void sendFeedBooking(AmazonSQS sqlClient,FeedBookingRequest book) {
+	public String urlFeedBooking(AmazonSQS sqlClient) {
 		String url = queueUrl(sqlClient, "FeedBookingQueue");
-		sendMessage(sqlClient, url, modelToMessage(book));
+		return url;
 	}
 	
-	public void sendMessage(EmailRequest req) {
+//	public void sendFeedBooking(AmazonSQS sqlClient,String url,FeedBookingRequest book) {
+//	
+//		sendMessage(sqlClient, url, modelToMessage(book));
+//	}
+	
+	public String urlHotelBooking(AmazonSQS sqlClient) {
+		String url = queueUrl(sqlClient, "HotelBookingQueue");
+		return url;
+	}
+	
+//	public void sendHotelBooking(AmazonSQS sqlClient,String url,HotelBookingRequest book) {
+//		//String url = queueUrl(sqlClient, "HotelBookingQueue");
+//		sendMessage(sqlClient, url, modelToMessage(book));
+//	}
+	
+	public void send(AmazonSQS sqlClient,String url,Object obj) {
+		//String url = queueUrl(sqlClient, "HotelBookingQueue");
+		sendMessage(sqlClient, url, modelToMessage(obj));
+	}
+	
+	protected void sendMessage(EmailRequest req) {
 		req.getParams().put("url", linkURL);
 		req.setTemplate("PDPAInvite");
 		AmazonSQS sqlClient =initClient();
@@ -73,9 +94,9 @@ public class SimpleQueueServiceClient {
 	
 	public void dailyFeed(Date d) {
 		
-		AmazonSQS sqlClient =initClient();
-		String url = queueUrl(sqlClient, "FeedOTAQueue");
-		sendMessage(sqlClient, url, DateUtils.format(d,"yyyy-MM-dd"));
+		AmazonSQS sqsClient =initClient();
+		String url = queueUrl(sqsClient, "FeedOTAQueue");
+		sendMessage(sqsClient, url, DateUtils.format(d,"yyyy-MM-dd"));
 	}
 	
 	protected String modelToMessage(Object req){
@@ -86,6 +107,12 @@ public class SimpleQueueServiceClient {
 			e.printStackTrace();
 		}
 		return "{}";
+	}
+	public String urlSendEmail(AmazonSQS sqsClient) {
+		String url = queueUrl(sqsClient, "SendEmailQueue");
+		return url;
+		// TODO Auto-generated method stub
+		
 	}
 
 }

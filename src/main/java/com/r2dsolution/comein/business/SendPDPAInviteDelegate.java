@@ -69,7 +69,10 @@ public class SendPDPAInviteDelegate extends BusinessDelegate{
 			tokenRepository.save(token);
 			
 			EmailRequest req = tokenToEmailRequest(emailTo,token);
-			client.sendMessage(req);
+			//client.sendMessage(req);
+			AmazonSQS sqsClient = client.initClient();
+			String url = client.urlSendEmail(sqsClient);
+			client.send(sqsClient, url, req);
 			
 		};
 	}

@@ -11,11 +11,11 @@ import com.r2dsolution.comein.business.DailyFeedOTADelegate;
 import com.r2dsolution.comein.business.FeedOTABookingDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
 
-public class DailyFeedOTAHandler implements RequestHandler<ScheduledEvent,ScheduledEvent>{
+public class DailyFeedOTAHandler extends BaseEventBridgeHandler{
 
 	@Override
-	public ScheduledEvent handleRequest(ScheduledEvent e, Context context) {
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(ComeInConfig.class);
+	public ScheduledEvent doHandleRequest(ScheduledEvent e, Context context) {
+//		ApplicationContext ctx = new AnnotationConfigApplicationContext(ComeInConfig.class);
 		BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
 		DailyFeedOTADelegate db = factory.initDailyFeedOTADelegate(context);
 		db.dailyFeed();

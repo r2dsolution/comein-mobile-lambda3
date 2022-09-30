@@ -855,6 +855,39 @@ Resources:
 
 # End Function - DailyFeedOTA
 
+
+# Start Function - AutoMatchOTABooking
+  AutoMatchOTABooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AutoMatchOTABooking'
+      Handler: com.r2dsolution.comein.lambda.handler.AutoMatchOTABookingHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - AutoMatchOTABooking
+
+
+# Start Function - OTABooking2HotelBooking
+  OTABooking2HotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-OTABooking2HotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.OTABooking2HotelBookingHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - OTABooking2HotelBooking
     
   GetHelloWorld:
     Type: AWS::Serverless::Function

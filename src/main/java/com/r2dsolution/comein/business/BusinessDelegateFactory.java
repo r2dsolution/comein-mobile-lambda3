@@ -19,6 +19,12 @@ public class BusinessDelegateFactory {
 	
 	@Autowired
 	private DailyFeedOTADelegate dailyFeedOTADelegate;
+	
+	@Autowired
+	private AutoMatchOTADelegate autoMatchOTADelegate;
+	
+	@Autowired
+	private OTA2HotelBookingDelegate ota2HotelBookingDelegate;
 
 
 
@@ -42,5 +48,15 @@ public class BusinessDelegateFactory {
 	public DailyFeedOTADelegate initDailyFeedOTADelegate(Context ctx) {
 		dailyFeedOTADelegate.initDelegate(ctx);
 		return dailyFeedOTADelegate;
+	}
+
+	public AutoMatchOTADelegate initAutoMatchOTADelegate(Context context) {
+		autoMatchOTADelegate.initDelegate(context);
+		return autoMatchOTADelegate;
+	}
+	
+	public OTA2HotelBookingDelegate initOTA2HotelBookingDelegate(Context context) {
+		ota2HotelBookingDelegate.initDelegate(context);
+		return ota2HotelBookingDelegate;
 	}
 }

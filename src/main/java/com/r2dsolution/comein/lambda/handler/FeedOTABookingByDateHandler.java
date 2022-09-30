@@ -14,11 +14,13 @@ import org.springframework.web.client.RestTemplate;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent.SQSMessage;
+import com.amazonaws.services.sqs.AmazonSQS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.api.model.FeedMail;
 import com.r2dsolution.comein.api.model.FeedMessage;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.FeedOTABookingDelegate;
+import com.r2dsolution.comein.client.SimpleQueueServiceClient;
 
 
 public class FeedOTABookingByDateHandler extends BaseSQSHandler{
@@ -38,11 +40,16 @@ public class FeedOTABookingByDateHandler extends BaseSQSHandler{
 	protected void doHandler(String body,Context context) {
 		try {
 			BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
-			FeedOTABookingDelegate db = factory.initFeedOTABookingDelegate(context);
-			FeedMail mail = db.feedOTA(body);
+			FeedOTABookingDelegate delegate = factory.initFeedOTABookingDelegate(context);
+			FeedMail mail = delegate.feedOTA(body);
 			
-				
-				db.sendToBookingQueue(body,mail);
+			SimpleQueueServiceClient client = ctx.getBean(SimpleQueueServiceClient.class);
+			AmazonSQS sqsClient = client.initClient();
+			String url = client.urlFeedBooking(sqsClient);
+			client.send(sqsClient, url, mail);
+			
+			
+//				db.sendToBookingQueue(body,mail);
 		
 		} catch(Exception ex) {
 			ex.printStackTrace();
