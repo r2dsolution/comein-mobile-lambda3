@@ -24,19 +24,23 @@ public class AutoMatchOTADelegate extends BusinessDelegate{
 	
 	
 	
-	public Flux<HotelBookingRequest> findByHotelNameRequest(String name,Long id){
-		List<OTABookingM> list = otaBookingRepository.findByHotelName(name);
+	public Flux<HotelBookingRequest> findByHotelNameRequest(String hotelName,Long hotelId,boolean isCancel){
+		List<OTABookingM> list = otaBookingRepository.findByHotelNameAndStatusAndIsCancelAndIsBookingIsTrue(hotelName,"UNMATCH",isCancel);
+		log("results size: "+list.size());
 		Flux<OTABookingM> bookings = Flux.fromIterable(list);
-		Flux<HotelBookingRequest> hotelBookings = bookings.map(booking-> doMap(booking,id));
+		Flux<HotelBookingRequest> hotelBookings = bookings.map(booking-> doMap(booking,hotelId,isCancel));
 		return hotelBookings;
 	}
 
 	
 
-	private HotelBookingRequest doMap(OTABookingM booking,Long hotelId) {
+	private HotelBookingRequest doMap(OTABookingM booking,Long hotelId,boolean isCancel) {
+		log("map booking-no: "+booking.getBookingNumber()+" to hotel-id: "+hotelId);
 		HotelBookingRequest req = new HotelBookingRequest();
 		req.setOtaBookingId(booking.getId());
+		req.setBookingNumber(booking.getBookingNumber());
 		req.setHotelId(hotelId);
+		req.setCancel(isCancel);
 		return req;
 	}
 	

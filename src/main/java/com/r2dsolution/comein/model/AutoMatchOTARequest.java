@@ -11,7 +11,14 @@ public class AutoMatchOTARequest implements Serializable{
 	
 	private String hotelName;
 	private int hotelId;
+	private boolean isCancel = false;
 	
+	public boolean isCancel() {
+		return isCancel;
+	}
+	public void setCancel(boolean isCancel) {
+		this.isCancel = isCancel;
+	}
 	public String getHotelName() {
 		return hotelName;
 	}

@@ -12,4 +12,6 @@ public interface OTABookingRepository  extends CrudRepository<OTABookingM, Long>
 
 	public Optional<OTABookingM> findByBookingNumber(String number);
 	public List<OTABookingM> findByHotelName(String hotel);
+	public List<OTABookingM> findByHotelNameAndStatusAndIsBookingIsTrueAndIsCancelIsFalse(String hotel,String status);
+	public List<OTABookingM> findByHotelNameAndStatusAndIsCancelAndIsBookingIsTrue(String hotel,String status,boolean isCancel);
 }

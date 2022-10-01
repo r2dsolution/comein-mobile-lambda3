@@ -10,7 +10,17 @@ public class HotelBookingRequest implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long otaBookingId;
+	private String bookingNumber;
 	private Long hotelId;
+	private boolean isCancel;
+
+	public boolean isCancel() {
+		return isCancel;
+	}
+
+	public void setCancel(boolean isCancel) {
+		this.isCancel = isCancel;
+	}
 
 	public Long getOtaBookingId() {
 		return otaBookingId;
@@ -26,4 +36,14 @@ public class HotelBookingRequest implements Serializable{
 	public void setHotelId(Long hotelId) {
 		this.hotelId = hotelId;
 	}
+
+	public String getBookingNumber() {
+		return bookingNumber;
+	}
+
+	public void setBookingNumber(String bookingNumber) {
+		this.bookingNumber = bookingNumber;
+	}
+	
+	
 }

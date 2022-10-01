@@ -55,4 +55,22 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 		}
 	}
 
+	public void cancelHotelBooking(String bookno,Long otaBookingId) {
+		try {
+			Optional<BookingInfoM> opt = bookingInfoRepository.findByBookingNo(bookno);
+			if (opt.isPresent()) {
+				BookingInfoM bookInfo = opt.get();
+				bookInfo.setOtaCancelId(otaBookingId);
+				bookInfo.setUpdatedBy("auto-match");
+				bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
+				bookInfo.setStatus("CANCEL");
+				bookingInfoRepository.save(bookInfo);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 }

@@ -48,7 +48,9 @@ public class BookingInfoM implements Serializable{
     private double price;
     
 	
-
+    private String status;
+    private java.sql.Timestamp updatedDate;
+    private String updatedBy;
 
 	AggregateReference<HotelM, Long> hotelId;
 	
@@ -251,6 +253,30 @@ public class BookingInfoM implements Serializable{
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public java.sql.Timestamp getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(java.sql.Timestamp updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	

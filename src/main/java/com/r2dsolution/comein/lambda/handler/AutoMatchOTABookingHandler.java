@@ -28,17 +28,18 @@ public class AutoMatchOTABookingHandler extends BaseSQSHandler{
 		for(SQSMessage message: event.getRecords()) {
 			String body = message.getBody();
 			try {
+				log("body request: "+body);
 				AutoMatchOTARequest req = mapper.readValue(body, AutoMatchOTARequest.class);
 				
 				BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
 				AutoMatchOTADelegate delegate  = factory.initAutoMatchOTADelegate(context);
-				Flux<HotelBookingRequest> list = delegate.findByHotelNameRequest(req.getHotelName(),new Long(req.getHotelId()));
+				Flux<HotelBookingRequest> list = delegate.findByHotelNameRequest(req.getHotelName(),new Long(req.getHotelId()),req.isCancel());
 				
 				SimpleQueueServiceClient client = ctx.getBean(SimpleQueueServiceClient.class);
 				AmazonSQS sqsClient = client.initClient();
 				String url = client.urlHotelBooking(sqsClient);
 				
-				list.subscribe(book->client.send(sqsClient, url, book));
+				list.subscribe(hotelReq->client.send(sqsClient, url, hotelReq));
 				//list.doOnNext(book->doSendQueue(book));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
