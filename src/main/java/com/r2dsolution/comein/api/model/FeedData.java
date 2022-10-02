@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FeedData {
+	public int inbox;
     public int count;
     public String nextPageToken;
     public FeedFilter filter;

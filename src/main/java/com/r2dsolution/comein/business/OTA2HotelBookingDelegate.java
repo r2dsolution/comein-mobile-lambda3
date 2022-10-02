@@ -38,18 +38,21 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 				book.setHotelId(hotelRef);
 				book.setBookingNo(ota.getBookingNumber());
 				book.setRoomName(ota.getRoomType());
-				book.setRoomDesc(ota.getRoomType());
+				book.setRoomDesc("");
 				book.setCheckin(ota.getCheckinDate());
 				book.setCheckout(ota.getCheckoutDate());
 				book.setVisitorAdult(ota.getAdult());
 				book.setVisitorChild(ota.getChild());
 				book.setCreatedDate(DateUtils.nowTimestamp());
 				book.setCreatedBy("auto-match");
+				book.setUpdatedDate(DateUtils.nowTimestamp());
+				book.setUpdatedBy("auto-match");
 				book.setOtaBookingId(otaId);
 				book.setOtaRefEmail(ota.getEmail());
 				book.setRefName(ota.getFirstName()+" "+ota.getLastName());
 				book.setOtaRefContact(ota.getContactNo());
 				book.setPrice(ota.getPrice());
+				book.setStatus("Active");
 				bookingInfoRepository.save(book);
 			};
 		}

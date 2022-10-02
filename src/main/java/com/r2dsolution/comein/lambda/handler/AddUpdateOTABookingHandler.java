@@ -90,7 +90,7 @@ public class AddUpdateOTABookingHandler extends BaseSQSHandler{
 			entity.setRoomNight(booking.roomNight);
 		};
 		entity.setRoomType(booking.roomType);
-		entity.setStatus("UNMATCH");
+		entity.setStatus("UnMatch");
 		entity.setTemplateLogic(booking.templateLogic);
 		return entity;
 	}
