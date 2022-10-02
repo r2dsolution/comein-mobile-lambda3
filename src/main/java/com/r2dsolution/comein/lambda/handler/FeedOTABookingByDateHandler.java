@@ -55,6 +55,7 @@ public class FeedOTABookingByDateHandler extends BaseSQSHandler{
 				FeedBookingRequest req = new FeedBookingRequest();
 				req.setDate(body);
 				req.setBooking(m.json);
+				req.setMessageId(m.id);
 				log("add ota-booking: "+m.json.bookingNumber+" by date: "+body);
 				client.send(sqsClient, url, req);
 			}

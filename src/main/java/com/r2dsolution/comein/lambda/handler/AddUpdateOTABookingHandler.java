@@ -39,13 +39,15 @@ public class AddUpdateOTABookingHandler extends BaseSQSHandler{
 			
 			String bookno=req.getBooking().bookingNumber;
 			System.out.println("book-no: "+bookno);
-			Optional<OTABookingM> opt =	repo.findByBookingNumber(bookno);
+			Optional<OTABookingM> opt =	repo.findByMessageId(req.getMessageId());
 			if (!opt.isPresent()) {
 				System.out.println("save book-no: "+bookno);
 				OTABookingM bookM = doModel(req.getBooking());
 				bookM.setFeedDate(DateUtils.initSQLDate(req.getDate()));
 				bookM = repo.save(bookM);
 				System.out.println("save id: "+bookM.getId());
+			}else {
+				log("message-id: "+req.getMessageId()+" duplicated event");
 			}
 			
 		} catch (Exception e) {

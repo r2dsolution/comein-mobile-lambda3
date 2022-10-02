@@ -14,6 +14,7 @@ public class FeedBookingRequest implements Serializable{
 
 	private String date;
 	private FeedBooking booking;
+	private String messageId;
 	
 	
 	public FeedBookingRequest() {
@@ -36,4 +37,11 @@ public class FeedBookingRequest implements Serializable{
 	public void setBooking(FeedBooking booking) {
 		this.booking = booking;
 	}
+	public String getMessageId() {
+		return messageId;
+	}
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
+	
 }
