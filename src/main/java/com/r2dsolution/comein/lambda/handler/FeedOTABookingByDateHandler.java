@@ -21,6 +21,7 @@ import com.r2dsolution.comein.api.model.FeedMessage;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.FeedOTABookingDelegate;
 import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.model.FeedBookingRequest;
 
 
 public class FeedOTABookingByDateHandler extends BaseSQSHandler{
@@ -43,10 +44,21 @@ public class FeedOTABookingByDateHandler extends BaseSQSHandler{
 			FeedOTABookingDelegate delegate = factory.initFeedOTABookingDelegate(context);
 			FeedMail mail = delegate.feedOTA(body);
 			
+			
+			
+			
 			SimpleQueueServiceClient client = ctx.getBean(SimpleQueueServiceClient.class);
 			AmazonSQS sqsClient = client.initClient();
 			String url = client.urlFeedBooking(sqsClient);
-			client.send(sqsClient, url, mail);
+			
+			for(FeedMessage m: mail.data.messages) {
+				FeedBookingRequest req = new FeedBookingRequest();
+				req.setDate(body);
+				req.setBooking(m.json);
+				log("add ota-booking: "+m.json.bookingNumber+" by date: "+body);
+				client.send(sqsClient, url, req);
+			}
+			
 			
 			
 //				db.sendToBookingQueue(body,mail);

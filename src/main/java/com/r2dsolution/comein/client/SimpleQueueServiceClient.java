@@ -96,7 +96,9 @@ public class SimpleQueueServiceClient {
 		
 		AmazonSQS sqsClient =initClient();
 		String url = queueUrl(sqsClient, "FeedOTAQueue");
-		sendMessage(sqsClient, url, DateUtils.format(d,"yyyy-MM-dd"));
+		String m = DateUtils.format(d,"yyyy-MM-dd");
+		System.out.println("date parameter: "+m);
+		sendMessage(sqsClient, url, m);
 	}
 	
 	protected String modelToMessage(Object req){
