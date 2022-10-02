@@ -44,6 +44,7 @@ public class AddUpdateOTABookingHandler extends BaseSQSHandler{
 				System.out.println("save book-no: "+bookno);
 				OTABookingM bookM = doModel(req.getBooking());
 				bookM.setFeedDate(DateUtils.initSQLDate(req.getDate()));
+				bookM.setMessageId(req.getMessageId());
 				bookM = repo.save(bookM);
 				System.out.println("save id: "+bookM.getId());
 			}else {
