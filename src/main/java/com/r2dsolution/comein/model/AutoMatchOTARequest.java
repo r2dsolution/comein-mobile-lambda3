@@ -9,7 +9,7 @@ public class AutoMatchOTARequest implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String hotelName;
+	//private String hotelName;
 	private int hotelId;
 	private boolean isCancel = false;
 	
@@ -19,12 +19,12 @@ public class AutoMatchOTARequest implements Serializable{
 	public void setCancel(boolean isCancel) {
 		this.isCancel = isCancel;
 	}
-	public String getHotelName() {
-		return hotelName;
-	}
-	public void setHotelName(String hotelName) {
-		this.hotelName = hotelName;
-	}
+//	public String getHotelName() {
+//		return hotelName;
+//	}
+//	public void setHotelName(String hotelName) {
+//		this.hotelName = hotelName;
+//	}
 	public int getHotelId() {
 		return hotelId;
 	}
