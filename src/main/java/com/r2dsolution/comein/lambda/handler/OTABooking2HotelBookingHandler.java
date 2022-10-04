@@ -27,9 +27,9 @@ public class OTABooking2HotelBookingHandler  extends BaseSQSHandler{
 				BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
 				OTA2HotelBookingDelegate delegate = factory.initOTA2HotelBookingDelegate(context);
 				if (req.isCancel()) {
-					delegate.cancelHotelBooking(req.getBookingNumber(),req.getOtaBookingId());
+					delegate.cancelHotelBooking(req.getBookingNumber(),req.getOtaBookingId(),req.getHotelId(),req.getOtaStatus());
 				} else {
-					delegate.newHotelBooking(req.getOtaBookingId(), req.getHotelId());
+					delegate.newHotelBooking(req.getOtaBookingId(), req.getHotelId(),req.getOtaStatus());
 				}
 				
 			} catch (Exception e) {

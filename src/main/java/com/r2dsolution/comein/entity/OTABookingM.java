@@ -11,6 +11,10 @@ public class OTABookingM implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static final String STATUS_UNMATCH = "UnMatch";
+	public static final String STATUS_AUTOMATCH = "AutoMatch";
+	public static final String STATUS_MANUALMATCH = "ManualMatch";
+	
 	@Id
 	private Long id;
 	

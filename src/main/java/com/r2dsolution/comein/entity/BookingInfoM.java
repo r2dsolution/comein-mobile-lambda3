@@ -17,6 +17,8 @@ public class BookingInfoM implements Serializable{
 
 	
 	private static final long serialVersionUID = 1L;
+	public static final String STATUS_ACTIVE = "Active";
+	public static final String STATUS_CANCEL = "Cancel";
 	
 	@Id
 	private Long id;

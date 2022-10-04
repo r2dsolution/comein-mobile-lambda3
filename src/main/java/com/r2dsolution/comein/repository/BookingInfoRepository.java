@@ -18,6 +18,7 @@ public interface BookingInfoRepository extends CrudRepository<BookingInfoM, Long
 	public Optional<BookingInfoM> findByBookingNoAndOwnerId(String bookNO, String ownerId)throws Exception;
 	public Optional<BookingInfoM> findByOtaBookingId(Long otaBookingId)throws Exception;
 	public Optional<BookingInfoM> findByBookingNo(String bookno)throws Exception;
+	public Optional<BookingInfoM> findByBookingNoAndHotelId(String bookno,Long hotelId)throws Exception;
 	
 //	public List<BookingInfoM> findByRefNameAndOwnerIdIsNull(String refname) throws Exception;
 //	public List<BookingInfoM> findByRefName2(String refname)throws Exception;

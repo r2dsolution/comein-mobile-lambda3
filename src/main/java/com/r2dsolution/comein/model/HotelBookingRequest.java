@@ -13,6 +13,7 @@ public class HotelBookingRequest implements Serializable{
 	private String bookingNumber;
 	private Long hotelId;
 	private boolean isCancel;
+	private String otaStatus;
 
 	public boolean isCancel() {
 		return isCancel;
@@ -44,6 +45,16 @@ public class HotelBookingRequest implements Serializable{
 	public void setBookingNumber(String bookingNumber) {
 		this.bookingNumber = bookingNumber;
 	}
+
+	public String getOtaStatus() {
+		return otaStatus;
+	}
+
+	public void setOtaStatus(String otaStatus) {
+		this.otaStatus = otaStatus;
+	}
+
+	
 	
 	
 }

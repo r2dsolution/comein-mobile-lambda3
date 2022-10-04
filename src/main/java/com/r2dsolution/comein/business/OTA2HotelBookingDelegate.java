@@ -27,7 +27,7 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 	@Autowired
 	private BookingInfoRepository bookingInfoRepository;
 	
-	public void newHotelBooking(Long otaId,Long hotelId) {
+	public void newHotelBooking(Long otaId,Long hotelId,String otaStatus) {
 		Optional<OTABookingM> otaOpt = otaBookingRepository.findById(otaId);
 		if (otaOpt.isPresent()) {
 			Optional<HotelM> hotel = hotelRepository.findById(hotelId);
@@ -52,22 +52,34 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 				book.setRefName(ota.getFirstName()+" "+ota.getLastName());
 				book.setOtaRefContact(ota.getContactNo());
 				book.setPrice(ota.getPrice());
-				book.setStatus("Active");
+				book.setStatus(BookingInfoM.STATUS_ACTIVE);
 				bookingInfoRepository.save(book);
+				
+				//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
+				ota.setStatus(otaStatus);
+				otaBookingRepository.save(ota);
 			};
 		}
 	}
 
-	public void cancelHotelBooking(String bookno,Long otaBookingId) {
+	public void cancelHotelBooking(String bookno,Long otaBookingId,Long hotelId,String otaStatus) {
 		try {
-			Optional<BookingInfoM> opt = bookingInfoRepository.findByBookingNo(bookno);
-			if (opt.isPresent()) {
-				BookingInfoM bookInfo = opt.get();
-				bookInfo.setOtaCancelId(otaBookingId);
-				bookInfo.setUpdatedBy("auto-match");
-				bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
-				bookInfo.setStatus("CANCEL");
-				bookingInfoRepository.save(bookInfo);
+			Optional<OTABookingM> otaOpt = otaBookingRepository.findById(otaBookingId);
+			if (otaOpt.isPresent()) {
+				OTABookingM ota = otaOpt.get();
+				Optional<BookingInfoM> opt = bookingInfoRepository.findByBookingNoAndHotelId(bookno,hotelId);
+				if (opt.isPresent()) {
+					BookingInfoM bookInfo = opt.get();
+					bookInfo.setOtaCancelId(otaBookingId);
+					bookInfo.setUpdatedBy("auto-match");
+					bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
+					bookInfo.setStatus(BookingInfoM.STATUS_CANCEL);
+					bookingInfoRepository.save(bookInfo);
+					
+					//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
+					ota.setStatus(otaStatus);
+					otaBookingRepository.save(ota);
+				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

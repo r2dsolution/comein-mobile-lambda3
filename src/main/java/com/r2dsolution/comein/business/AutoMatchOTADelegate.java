@@ -75,6 +75,7 @@ public class AutoMatchOTADelegate extends BusinessDelegate{
 		req.setBookingNumber(booking.getBookingNumber());
 		req.setHotelId(hotelId);
 		req.setCancel(isCancel);
+		req.setOtaStatus(OTABookingM.STATUS_AUTOMATCH);
 		return req;
 	}
 	
