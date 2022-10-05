@@ -67,18 +67,22 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 			Optional<OTABookingM> otaOpt = otaBookingRepository.findById(otaBookingId);
 			if (otaOpt.isPresent()) {
 				OTABookingM ota = otaOpt.get();
-				Optional<BookingInfoM> opt = bookingInfoRepository.findByBookingNoAndHotelId(bookno,hotelId);
+				Optional<BookingInfoM> opt = bookingInfoRepository.findByBookingNo(bookno);
 				if (opt.isPresent()) {
 					BookingInfoM bookInfo = opt.get();
-					bookInfo.setOtaCancelId(otaBookingId);
-					bookInfo.setUpdatedBy("auto-match");
-					bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
-					bookInfo.setStatus(BookingInfoM.STATUS_CANCEL);
-					bookingInfoRepository.save(bookInfo);
-					
-					//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
-					ota.setStatus(otaStatus);
-					otaBookingRepository.save(ota);
+					log("search found book-no:"+bookInfo.getBookingNo()+" hotel-id: "+bookInfo.getHotelId().getId());
+					if (bookInfo.getHotelId().getId()==hotelId) {
+						
+						bookInfo.setOtaCancelId(otaBookingId);
+						bookInfo.setUpdatedBy("auto-match");
+						bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
+						bookInfo.setStatus(BookingInfoM.STATUS_CANCEL);
+						bookingInfoRepository.save(bookInfo);
+						
+						//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
+						ota.setStatus(otaStatus);
+						otaBookingRepository.save(ota);
+					}
 				}
 			}
 		} catch (Exception e) {
