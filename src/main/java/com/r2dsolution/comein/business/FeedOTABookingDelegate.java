@@ -23,7 +23,10 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.api.model.FeedMail;
 import com.r2dsolution.comein.api.model.FeedMessage;
 import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.entity.OTADailyReport;
 import com.r2dsolution.comein.model.FeedBookingRequest;
+import com.r2dsolution.comein.repository.OTADailyReportRepository;
+import com.r2dsolution.comein.util.DateUtils;
 
 @Component
 public class FeedOTABookingDelegate  extends BusinessDelegate{
@@ -37,11 +40,14 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 	@Autowired
 	private SimpleQueueServiceClient client;
 	
+	@Autowired
+	private OTADailyReportRepository otaDailyReportRepository;
+	
 	
 	
 	public FeedMail feedOTA(String dateStr) {
-		System.out.println("accessToken: "+loginAccessToken);
-		System.out.println("date: "+dateStr);
+		log("accessToken: "+loginAccessToken);
+		log("date: "+dateStr);
 //		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 //		
 //		Date date = cal.getTime();
@@ -62,7 +68,15 @@ public class FeedOTABookingDelegate  extends BusinessDelegate{
 		
 		ResponseEntity<FeedMail> result = restTemplate.exchange(endpoint+query,HttpMethod.GET,request, FeedMail.class);
 		FeedMail body = result.getBody();
-		System.out.println("message count: "+body.data.count);
+		log("message count: "+body.data.count);
+		
+		OTADailyReport report = new OTADailyReport();
+		report.setCreatedBy("auto-match-engine");
+		report.setCreatedDate(DateUtils.nowTimestamp());
+		report.setFeedDate(dateStr);
+		report.setMailCount(body.data.count);
+		otaDailyReportRepository.save(report);
+		
 		return body;
 	}
 
