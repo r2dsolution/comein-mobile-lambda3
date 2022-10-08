@@ -27,43 +27,62 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 	@Autowired
 	private BookingInfoRepository bookingInfoRepository;
 	
-	public void newHotelBooking(Long otaId,Long hotelId,String otaStatus) {
+	public static String ENGINE_NAME = "auto-match-engine";
+	
+	public void newHotelBooking(Long otaId,Long hotelId,String otaStatus) throws Exception {
 		Optional<OTABookingM> otaOpt = otaBookingRepository.findById(otaId);
 		if (otaOpt.isPresent()) {
 			Optional<HotelM> hotel = hotelRepository.findById(hotelId);
 			if (hotel.isPresent()) {
 				OTABookingM ota = otaOpt.get();
-				BookingInfoM book = new BookingInfoM();
-				AggregateReference<HotelM,Long> hotelRef = AggregateReference.to(hotel.get().getId());
-				book.setHotelId(hotelRef);
-				book.setBookingNo(ota.getBookingNumber());
-				book.setRoomName(ota.getRoomType());
-				book.setRoomDesc("");
-				book.setCheckin(ota.getCheckinDate());
-				book.setCheckout(ota.getCheckoutDate());
-				book.setVisitorAdult(ota.getAdult());
-				book.setVisitorChild(ota.getChild());
-				book.setCreatedDate(DateUtils.nowTimestamp());
-				book.setCreatedBy("auto-match");
-				book.setUpdatedDate(DateUtils.nowTimestamp());
-				book.setUpdatedBy("auto-match");
-				book.setOtaBookingId(otaId);
-				book.setOtaRefEmail(ota.getEmail());
-				book.setRefName(ota.getFirstName()+" "+ota.getLastName());
-				book.setOtaRefContact(ota.getContactNo());
-				book.setPrice(ota.getPrice());
-				book.setStatus(BookingInfoM.STATUS_ACTIVE);
-				bookingInfoRepository.save(book);
 				
-				//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
-				ota.setStatus(otaStatus);
-				otaBookingRepository.save(ota);
+				Optional<BookingInfoM> opt = bookingInfoRepository.findByBookingNo(ota.getBookingNumber());
+				if (opt.isPresent()) {
+					BookingInfoM bookInfo = opt.get();
+					bookInfo.setOtaBookingId(otaId);
+					bookInfo.setUpdatedBy(ENGINE_NAME);
+					bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
+					bookingInfoRepository.save(bookInfo);
+					
+					//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
+					ota.setStatus(otaStatus);
+					otaBookingRepository.save(ota);
+					
+				} else {
+					
+					BookingInfoM book = new BookingInfoM();
+					AggregateReference<HotelM,Long> hotelRef = AggregateReference.to(hotel.get().getId());
+					book.setHotelId(hotelRef);
+					book.setBookingNo(ota.getBookingNumber());
+					book.setRoomName(ota.getRoomType());
+					book.setRoomDesc("");
+					book.setCheckin(ota.getCheckinDate());
+					book.setCheckout(ota.getCheckoutDate());
+					book.setVisitorAdult(ota.getAdult());
+					book.setVisitorChild(ota.getChild());
+					book.setCreatedDate(DateUtils.nowTimestamp());
+					book.setCreatedBy(ENGINE_NAME);
+					book.setUpdatedDate(DateUtils.nowTimestamp());
+					book.setUpdatedBy(ENGINE_NAME);
+					book.setOtaBookingId(otaId);
+					book.setOtaRefEmail(ota.getEmail());
+					book.setRefName(ota.getFirstName()+" "+ota.getLastName());
+					book.setOtaRefContact(ota.getContactNo());
+					book.setPrice(ota.getPrice());
+					book.setStatus(BookingInfoM.STATUS_ACTIVE);
+					bookingInfoRepository.save(book);
+					
+					//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
+					ota.setStatus(otaStatus);
+					otaBookingRepository.save(ota);
+				};
 			};
 		}
 	}
 
 	public void cancelHotelBooking(String bookno,Long otaBookingId,Long hotelId,String otaStatus) {
 		try {
+			
 			Optional<OTABookingM> otaOpt = otaBookingRepository.findById(otaBookingId);
 			if (otaOpt.isPresent()) {
 				OTABookingM ota = otaOpt.get();
@@ -74,12 +93,43 @@ public class OTA2HotelBookingDelegate extends BusinessDelegate{
 					if (bookInfo.getHotelId().getId()==hotelId) {
 						
 						bookInfo.setOtaCancelId(otaBookingId);
-						bookInfo.setUpdatedBy("auto-match");
+						bookInfo.setUpdatedBy(ENGINE_NAME);
 						bookInfo.setUpdatedDate(DateUtils.nowTimestamp());
 						bookInfo.setStatus(BookingInfoM.STATUS_CANCEL);
 						bookingInfoRepository.save(bookInfo);
 						
 						//ota.setStatus(OTABookingM.STATUS_AUTOMATCH);
+						ota.setStatus(otaStatus);
+						otaBookingRepository.save(ota);
+					}
+				} else {
+					
+					Optional<HotelM> hotel = hotelRepository.findById(hotelId);
+					if (hotel.isPresent()) {
+					
+						BookingInfoM book = new BookingInfoM();
+						AggregateReference<HotelM,Long> hotelRef = AggregateReference.to(hotel.get().getId());
+						book.setHotelId(hotelRef);
+						book.setBookingNo(ota.getBookingNumber());
+						book.setRoomName(ota.getRoomType());
+						book.setRoomDesc("");
+						book.setCheckin(ota.getCheckinDate());
+						book.setCheckout(ota.getCheckoutDate());
+						book.setVisitorAdult(ota.getAdult());
+						book.setVisitorChild(ota.getChild());
+						book.setCreatedDate(DateUtils.nowTimestamp());
+						book.setCreatedBy(ENGINE_NAME);
+						book.setUpdatedDate(DateUtils.nowTimestamp());
+						book.setUpdatedBy(ENGINE_NAME);
+						book.setOtaBookingId(otaBookingId);
+						book.setOtaCancelId(otaBookingId);
+						book.setOtaRefEmail(ota.getEmail());
+						book.setRefName(ota.getFirstName()+" "+ota.getLastName());
+						book.setOtaRefContact(ota.getContactNo());
+						book.setPrice(ota.getPrice());
+						book.setStatus(BookingInfoM.STATUS_CANCEL);
+						bookingInfoRepository.save(book);
+						
 						ota.setStatus(otaStatus);
 						otaBookingRepository.save(ota);
 					}
