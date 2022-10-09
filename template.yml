@@ -33,7 +33,9 @@ Parameters:
       "profile":{
          "email" : "$context.authorizer.claims.email",
          "comein_id":"$context.authorizer.claims['custom:comein_id']",
+         "ref_name" : "$context.authorizer.claims.name",
          "sub":"$context.authorizer.claims.sub"
+         
         },
       "params" : {
       #foreach($type in $allParams.keySet())
@@ -772,6 +774,68 @@ Resources:
       RestApiId: !Ref ComeInRestApi 
       
 # End Function - DeleteBookingKYC
+
+# Start Function - ListBookingByRef
+  ListBookingByRef:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListBookingByRef'
+      Handler: com.r2dsolution.comein.lambda.handler.ListBookingByRefHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ListBookingByRefPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListBookingByRef
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/notify-hotel-bookings
+      
+  ListBookingByRefResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: notify-hotel-bookings
+      
+  ListBookingByRefMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListBookingByRefResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByRef.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ListBookingByRefDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ListBookingByRefMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ListBookingByRef
 
 # Start Function - SignUpPDPAInfo
   SignUpPrePDPAInfo:

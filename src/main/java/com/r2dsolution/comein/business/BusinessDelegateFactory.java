@@ -25,8 +25,23 @@ public class BusinessDelegateFactory {
 	
 	@Autowired
 	private OTA2HotelBookingDelegate ota2HotelBookingDelegate;
+	
+	@Autowired
+	private ListBookingInfoByRefDelegate listBookingInfoByRefDelegate;
+	
+	@Autowired
+	private MapBookingInfoToHotelBookingDelegate mapBookingInfoToHotelBookingDelegate;
 
 
+	public MapBookingInfoToHotelBookingDelegate initMapBookingInfoToHotelBookingDelegate(Context ctx) {
+		mapBookingInfoToHotelBookingDelegate.initDelegate(ctx);
+		return mapBookingInfoToHotelBookingDelegate;
+	}
+	
+	public ListBookingInfoByRefDelegate initListBookingInfoByRefDelegate(Context ctx) {
+		listBookingInfoByRefDelegate.initDelegate(ctx);
+		return listBookingInfoByRefDelegate;
+	}
 
 	public ViewKycBookingDelegate initViewKycBookingDelegate(Context ctx) {
 		viewKycBookingDelegate.initDelegate(ctx);

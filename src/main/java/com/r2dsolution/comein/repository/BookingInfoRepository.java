@@ -20,8 +20,9 @@ public interface BookingInfoRepository extends CrudRepository<BookingInfoM, Long
 	public Optional<BookingInfoM> findByBookingNo(String bookno)throws Exception;
 	//public Optional<BookingInfoM> findByBookingNoAndHotelId(String bookno,Long hotelId)throws Exception;
 	
-//	public List<BookingInfoM> findByRefNameAndOwnerIdIsNull(String refname) throws Exception;
-//	public List<BookingInfoM> findByRefName2(String refname)throws Exception;
+	@Query("select * from booking_info where owner_id is null and ref_email = crypt( :p_email ,salt_key)")
+	public List<BookingInfoM> findByReference(@Param("p_email") String ref_email) throws Exception;
+	public List<BookingInfoM> findByRefName2(String refname)throws Exception;
 //	//public List<BookingInfoM> findByEmailOrCustomerEmail(String email,String customer_email) throws Exception;
 //	public List<BookingInfoM> findByOwnerIdOrTargetId(String owner,String target) throws Exception;
 //	
