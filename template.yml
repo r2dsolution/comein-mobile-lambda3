@@ -855,7 +855,7 @@ Resources:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId: !Ref ComeInRestApi
-      ParentId: !Ref InitBookingByIdResource
+      ParentId: !Ref ListBookingByEmailResource
       PathPart: init
       
   InitBookingByIdMethod:
