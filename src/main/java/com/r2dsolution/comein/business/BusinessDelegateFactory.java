@@ -31,6 +31,14 @@ public class BusinessDelegateFactory {
 	
 	@Autowired
 	private MapBookingInfoToHotelBookingDelegate mapBookingInfoToHotelBookingDelegate;
+	
+	@Autowired
+	private InitBookingByIdDelegate initBookingByIdDelegate;
+	
+	public InitBookingByIdDelegate initInitBookingByIdDelegate(Context ctx) {
+		initBookingByIdDelegate.initDelegate(ctx);
+		return initBookingByIdDelegate;
+	}
 
 
 	public MapBookingInfoToHotelBookingDelegate initMapBookingInfoToHotelBookingDelegate(Context ctx) {

@@ -96,6 +96,7 @@ Resources:
       Description: A test API
       Name: MyRestAPI
   
+  
   ComeInGateWayHttpResponse:
     Type: 'AWS::ApiGateway::Model'
     Properties:
@@ -116,13 +117,6 @@ Resources:
           "title" : "Response Schema"
         }
         
-      
-  ComeInDeployment:
-    Type: 'AWS::ApiGateway::Deployment'
-    DependsOn:
-      - GetHelloWorldMethod
-    Properties:
-      RestApiId: !Ref ComeInRestApi
       
   ListBookingByEmailDeploymentTest:
     Type: 'AWS::ApiGateway::Deployment'
@@ -795,16 +789,14 @@ Resources:
       FunctionName: !Ref ListBookingByRef
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/notify-hotel-bookings
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/notify
       
   ListBookingByRefResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId: !Ref ComeInRestApi
-      ParentId: !GetAtt 
-        - ComeInRestApi
-        - RootResourceId
-      PathPart: notify-hotel-bookings
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: notify
       
   ListBookingByRefMethod:
     Type: AWS::ApiGateway::Method
@@ -836,6 +828,73 @@ Resources:
       RestApiId: !Ref ComeInRestApi 
       
 # End Function - ListBookingByRef
+
+# Start Function - InitBookingById
+  InitBookingById:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-InitBookingById'
+      Handler: com.r2dsolution.comein.lambda.handler.InitBookingByIdHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  InitBookingByIdPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref InitBookingById
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/init
+      
+  InitBookingByIdResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref InitBookingByIdResource
+      PathPart: init
+      
+  InitBookingByIdMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref InitBookingByIdResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt InitBookingById.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                
+      
+# End Function - InitBookingById
+
+# Start ComeIn Deployment
+
+  ComeInDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - GetHelloWorldMethod
+      - ListBookingByRefMethod
+      - InitBookingByIdMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      
+# End ComeIn Deployment
 
 # Start Function - SignUpPDPAInfo
   SignUpPrePDPAInfo:
