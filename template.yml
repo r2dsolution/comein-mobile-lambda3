@@ -820,12 +820,12 @@ Resources:
       MethodResponses:
         - StatusCode: 200
                  
-  ListBookingByRefDeployment:
-    Type: 'AWS::ApiGateway::Deployment'
-    DependsOn:
-      - ListBookingByRefMethod
-    Properties:
-      RestApiId: !Ref ComeInRestApi 
+#  ListBookingByRefDeployment:
+#    Type: 'AWS::ApiGateway::Deployment'
+#    DependsOn:
+#      - ListBookingByRefMethod
+#    Properties:
+#      RestApiId: !Ref ComeInRestApi 
       
 # End Function - ListBookingByRef
 
