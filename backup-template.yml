@@ -1,0 +1,1141 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+- AWS::Serverless-2016-10-31
+- AWS::CodeStar
+
+Parameters:
+  ProjectId:
+    Type: String
+    Description: AWS CodeStar projectID used to associate new resources to team members
+  CodeDeployRole:
+    Type: String
+    Description: IAM role to allow AWS CodeDeploy to manage deployment of AWS Lambda functions
+  Stage:
+    Type: String
+    Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
+    Default: ''
+  ComeInCognitoUserPoolId:
+    Type: String
+    Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
+    Default: 'ap-southeast-1_sH5GQOfGD'
+  ComeInResponseTemplate:
+    Type: String
+    Description: request-template
+    Default: $input.json('$.body')
+  ComeInRequestTemplate:
+    Type: String
+    Description: request-template
+    Default: |
+      #set($allParams = $input.params())
+      {
+      "body" : $input.json('$'),
+      "path" : "$context.resourcePath",
+      "profile":{
+         "email" : "$context.authorizer.claims.email",
+         "comein_id":"$context.authorizer.claims['custom:comein_id']",
+         "ref_name" : "$context.authorizer.claims.name",
+         "sub":"$context.authorizer.claims.sub"
+         
+        },
+      "params" : {
+      #foreach($type in $allParams.keySet())
+          #set($params = $allParams.get($type))
+      "$type" : {
+          #foreach($paramName in $params.keySet())
+          "$paramName" : "$util.escapeJavaScript($params.get($paramName))"
+              #if($foreach.hasNext),#end
+          #end
+      }
+          #if($foreach.hasNext),#end
+      #end
+      },
+      "stage-variables" : {
+      #foreach($key in $stageVariables.keySet())
+      "$key" : "$util.escapeJavaScript($stageVariables.get($key))"
+          #if($foreach.hasNext),#end
+      #end
+      },
+      "context" : {
+          "account-id" : "$context.identity.accountId",
+          "api-id" : "$context.apiId",
+          "api-key" : "$context.identity.apiKey",
+          "authorizer-principal-id" : "$context.authorizer.principalId",
+          "caller" : "$context.identity.caller",
+          "cognito-authentication-provider" : "$context.identity.cognitoAuthenticationProvider",
+          "cognito-authentication-type" : "$context.identity.cognitoAuthenticationType",
+          "cognito-identity-id" : "$context.identity.cognitoIdentityId",
+          "cognito-identity-pool-id" : "$context.identity.cognitoIdentityPoolId",
+          "http-method" : "$context.httpMethod",
+          "stage" : "$context.stage",
+          "source-ip" : "$context.identity.sourceIp",
+          "user" : "$context.identity.user",
+          "user-agent" : "$context.identity.userAgent",
+          "user-arn" : "$context.identity.userArn",
+          "request-id" : "$context.requestId",
+          "resource-id" : "$context.resourceId",
+          "resource-path" : "$context.resourcePath"
+          }
+      }
+    
+    
+
+Globals:
+  Function:
+    AutoPublishAlias: live
+    DeploymentPreference:
+      Enabled: true
+      Type: Canary10Percent5Minutes
+      Role: !Ref CodeDeployRole
+
+Resources:
+  ComeInRestApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      # Body:
+        # OpenAPI specification: null
+      Description: A test API
+      Name: MyRestAPI
+  
+  
+  ComeInGateWayHttpResponse:
+    Type: 'AWS::ApiGateway::Model'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ContentType: application/json
+      Description: Schema for Http Response of GateWayAPI
+      Name: GateWayHttpResponse
+      Schema: |
+        {
+          "$schema" : "http://json-schema.org/draft-04/schema#",
+          "type" : "object",
+          "required" : [ "code" ],
+          "properties" : {
+            "code" : {
+              "type" : "string"
+            }
+          },
+          "title" : "Response Schema"
+        }
+        
+      
+  ListBookingByEmailDeploymentTest:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ListBookingByEmailMethodTest
+    Properties:
+      RestApiId: !Ref ComeInRestApi    
+
+    
+  #ProdStage:
+    #Type: AWS::ApiGateway::Stage
+    #Properties:
+      #StageName: Prod
+      #RestApiId: !Ref ComeInRestApi
+      #DeploymentId: !Ref ComeInDeployment
+  
+  DevStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: Dev
+      RestApiId: !Ref ComeInRestApi
+      DeploymentId: !Ref ComeInDeployment
+   
+  ComeInAuthorizer:
+    Type: 'AWS::ApiGateway::Authorizer'
+    Properties:  
+      Name: comein_authorizer
+      Type: COGNITO_USER_POOLS
+      RestApiId: !Ref ComeInRestApi
+      IdentitySource: method.request.header.comein_auth
+      ProviderARNs: 
+        - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${ComeInCognitoUserPoolId}
+  
+  ListBookingByEmailResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: hotel-bookings
+      
+  ListBookingByEmailResourceTest:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: test-hotel-bookings
+  
+  ListBookingByEmailMethodTest:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListBookingByEmailResourceTest
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByEmail.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json' : !Ref ComeInRequestTemplate
+        IntegrationResponses: 
+          - StatusCode: 200  
+      MethodResponses:
+        - StatusCode: 200         
+              
+  ListBookingByEmailMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListBookingByEmailResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByEmail.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json' : !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+        
+ 
+  PostHelloWorldMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt GetHelloWorld.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json' : !Ref ComeInRequestTemplate
+  
+  GetHelloWorldMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      HttpMethod: GET
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt GetHelloWorld.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+
+  ListBookingByEmailTestPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListBookingByEmail
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/test-hotel-bookings
+
+  ListBookingByEmailPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListBookingByEmail
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings
+      
+  ListBookingByEmail:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListBookingByEmail'
+      Handler: com.r2dsolution.comein.lambda.handler.ListBookingByEmailHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+        
+# Start Function - ViewHotelBookingByBookNO
+  ViewHotelBookingByBookNO:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ViewHotelBookingByBookNO'
+      Handler: com.r2dsolution.comein.lambda.handler.ViewHotelBookingByBookNOHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ViewHotelBookingByBookNOPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ViewHotelBookingByBookNO
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/view
+      
+  ViewHotelBookingByBookNOResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: view
+      
+  ViewHotelBookingByBookNOMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ViewHotelBookingByBookNOResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ViewHotelBookingByBookNO.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ViewHotelBookingByBookNODeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ViewHotelBookingByBookNOMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ViewHotelBookingByBookNO  
+
+# Start Function - ViewKYCHotelBooking
+  ViewKYCHotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ViewKYCHotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.ViewKYCHotelBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ViewKYCHotelBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ViewKYCHotelBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-hotel-bookings
+      
+  ViewKYCHotelBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: kyc-hotel-bookings
+      
+  ViewKYCHotelBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ViewKYCHotelBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ViewKYCHotelBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ViewKYCHotelBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ViewKYCHotelBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ViewKYCHotelBooking  
+
+# Start Function - ForwardHotelBooking
+  ForwardHotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ForwardHotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.ForwardHotelBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ForwardHotelBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ForwardHotelBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/forward
+      
+  ForwardHotelBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: forward
+      
+  ForwardHotelBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ForwardHotelBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ForwardHotelBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ForwardHotelBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ForwardHotelBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ForwardHotelBooking  
+
+# Start Function - CancelForwardHotelBooking
+  CancelForwardHotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-CancelForwardHotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.CancelForwardHotelBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  CancelForwardHotelBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CancelForwardHotelBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/cancel-forward
+      
+  CancelForwardHotelBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: cancel-forward
+      
+  CancelForwardHotelBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref CancelForwardHotelBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt CancelForwardHotelBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  CancelForwardHotelBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - CancelForwardHotelBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - CancelForwardHotelBooking  
+
+# Start Function - AddKYCInfo
+  AddKYCInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AddKYCInfo'
+      Handler: com.r2dsolution.comein.lambda.handler.AddKYCInfoHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  AddKYCInfoPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AddKYCInfo
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-info/add-kyc
+      
+  KYCInfoResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: kyc-info
+      
+  AddKYCInfoResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref KYCInfoResource
+      PathPart: add-kyc
+      
+  AddKYCInfoMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref AddKYCInfoResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt AddKYCInfo.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  AddKYCInfoDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - AddKYCInfoMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - AddKYCInfo
+
+# Start Function - DeleteKYCInfo
+  DeleteKYCInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DeleteKYCInfo'
+      Handler: com.r2dsolution.comein.lambda.handler.DeleteKYCInfoHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  DeleteKYCInfoPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref DeleteKYCInfo
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-info/delete-kyc
+      
+  DeleteKYCInfoResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref KYCInfoResource
+      PathPart: delete-kyc
+      
+  DeleteKYCInfoMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref DeleteKYCInfoResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt DeleteKYCInfo.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  DeleteKYCInfoDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - DeleteKYCInfoMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - DeleteKYCInfo
+
+
+# Start Function - AddBookingKYC
+  AddBookingKYC:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AddBookingKYC'
+      Handler: com.r2dsolution.comein.lambda.handler.AddBookingKYCHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  AddBookingKYCPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AddBookingKYC
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-hotel-bookings/add-kyc
+      
+  AddBookingKYCResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ViewKYCHotelBookingResource
+      PathPart: add-kyc
+      
+  AddBookingKYCMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref AddBookingKYCResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt AddBookingKYC.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  AddBookingKYCDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - AddBookingKYCMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - AddBookingKYC
+
+
+# Start Function - DeleteBookingKYC
+  DeleteBookingKYC:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DeleteBookingKYC'
+      Handler: com.r2dsolution.comein.lambda.handler.DeleteBookingKYCHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  DeleteBookingKYCPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref DeleteBookingKYC
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/kyc-hotel-bookings/delete-kyc
+      
+  DeleteBookingKYCResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ViewKYCHotelBookingResource
+      PathPart: delete-kyc
+      
+  DeleteBookingKYCMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref DeleteBookingKYCResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt DeleteBookingKYC.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  DeleteBookingKYCDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - DeleteBookingKYCMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - DeleteBookingKYC
+
+# Start Function - ReserveTourBooking
+  ReserveTourBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DeleteBookingKYC'
+      Handler: com.r2dsolution.comein.lambda.handler.ReserveTourBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ReserveTourBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ReserveTourBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/reserve-tour
+      
+  ReserveTourBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: reserve-tour
+      
+  ReserveTourBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ReserveTourBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ReserveTourBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ReserveTourBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ReserveTourBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ReserveTourBooking
+
+# Start Function - ListBookingByRef
+  ListBookingByRef:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListBookingByRef'
+      Handler: com.r2dsolution.comein.lambda.handler.ListBookingByRefHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ListBookingByRefPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListBookingByRef
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/notify
+      
+  ListBookingByRefResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: notify
+      
+  ListBookingByRefMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListBookingByRefResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListBookingByRef.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ListBookingByRefDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ListBookingByRefMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ListBookingByRef
+
+# Start Function - InitBookingById
+  InitBookingById:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-InitBookingById'
+      Handler: com.r2dsolution.comein.lambda.handler.InitBookingByIdHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  InitBookingByIdPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref InitBookingById
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/init
+      
+  InitBookingByIdResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: init
+      
+  InitBookingByIdMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref InitBookingByIdResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt InitBookingById.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                
+  InitBookingByIdDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - InitBookingByIdMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi      
+                       
+# End Function - InitBookingById
+
+# Start ComeIn Deployment
+
+  ComeInDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - GetHelloWorldMethod
+      #- ListBookingByRefMethod
+      #- InitBookingByIdMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      
+# End ComeIn Deployment
+
+# Start Function - SignUpPDPAInfo
+  SignUpPrePDPAInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SignUpPrePDPAInfo'
+      Handler: com.r2dsolution.comein.lambda.handler.SignUpPrePDPAInfoHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - SignUpPDPAInfo
+
+
+# Start Function - SendEmailByTemplate
+  SendEmailByTemplate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-SendEmailByTemplate'
+      Handler: com.r2dsolution.comein.lambda.handler.SendEmailByTemplateHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - SendEmailByTemplate
+
+# Start Function - FeedOTABookingByDate
+  FeedOTABookingByDate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-FeedOTABookingByDate'
+      Handler: com.r2dsolution.comein.lambda.handler.FeedOTABookingByDateHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - FeedOTABookingByDate
+
+# Start Function - AddUpdateOTABooking
+  AddUpdateOTABooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AddUpdateOTABooking'
+      Handler: com.r2dsolution.comein.lambda.handler.AddUpdateOTABookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - AddUpdateOTABooking
+
+
+# Start Function - DailyFeedOTA
+  DailyFeedOTA:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DailyFeedOTA'
+      Handler: com.r2dsolution.comein.lambda.handler.DailyFeedOTAHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - DailyFeedOTA
+
+
+# Start Function - AutoMatchOTABooking
+  AutoMatchOTABooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-AutoMatchOTABooking'
+      Handler: com.r2dsolution.comein.lambda.handler.AutoMatchOTABookingHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - AutoMatchOTABooking
+
+
+# Start Function - OTABooking2HotelBooking
+  OTABooking2HotelBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-OTABooking2HotelBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.OTABooking2HotelBookingHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - OTABooking2HotelBooking
+
+# Start Function - ListTourTicketByDate
+  ListTourTicketByDate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListTourTicketByDate'
+      Handler: com.r2dsolution.comein.lambda.handler.ListTourTicketByDateHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - ListTourTicketByDate
+
+# Start Function - UpdateTourTicketBooking
+  UpdateTourTicketBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-UpdateTourTicketBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.UpdateTourTicketBookingHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - UpdateTourTicketBooking
+    
+  GetHelloWorld:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-GetHelloWorld'
+      Handler: com.aws.codestar.projecttemplates.handler.HelloWorldHandler
+      Runtime: java11
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+  
+  LambdaExecutionRole:
+    Description: Creating service role in IAM for AWS Lambda
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [lambda.amazonaws.com]
+          Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole'
+      PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
