@@ -780,7 +780,7 @@ Resources:
   ReserveTourBooking:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DeleteBookingKYC'
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ReserveTourBooking'
       Handler: com.r2dsolution.comein.lambda.handler.ReserveTourBookingHandler
       Runtime: java11
       Timeout: 30
