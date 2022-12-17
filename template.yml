@@ -858,16 +858,14 @@ Resources:
       FunctionName: !Ref ListBookingByRef
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/notify-hotel-bookings
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/hotel-bookings/notify
       
   ListBookingByRefResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId: !Ref ComeInRestApi
-      ParentId: !GetAtt 
-        - ComeInRestApi
-        - RootResourceId
-      PathPart: notify-hotel-bookings
+      ParentId: !Ref ListBookingByEmailResource
+      PathPart: notify
       
   ListBookingByRefMethod:
     Type: AWS::ApiGateway::Method
