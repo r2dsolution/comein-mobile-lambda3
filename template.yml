@@ -769,6 +769,68 @@ Resources:
       
 # End Function - DeleteBookingKYC
 
+# Start Function - ReserveTourBooking
+  ReserveTourBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-DeleteBookingKYC'
+      Handler: com.r2dsolution.comein.lambda.handler.ReserveTourBookingHandler
+      Runtime: java11
+      Timeout: 30
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn      
+
+  ReserveTourBookingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ReserveTourBooking
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/reserve-tour
+      
+  ReserveTourBookingResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: reserve-tour
+      
+  ReserveTourBookingMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ReserveTourBookingResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ReserveTourBooking.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ReserveTourBookingDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ReserveTourBookingMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ReserveTourBooking
+
 # Start Function - ListBookingByRef
   ListBookingByRef:
     Type: AWS::Serverless::Function
@@ -1011,6 +1073,38 @@ Resources:
         - Arn   
 
 # End Function - OTABooking2HotelBooking
+
+# Start Function - ListTourTicketByDate
+  ListTourTicketByDate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListTourTicketByDate'
+      Handler: com.r2dsolution.comein.lambda.handler.ListTourTicketByDateHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - ListTourTicketByDate
+
+# Start Function - UpdateTourTicketBooking
+  UpdateTourTicketBooking:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-UpdateTourTicketBooking'
+      Handler: com.r2dsolution.comein.lambda.handler.UpdateTourTicketBookingHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+# End Function - UpdateTourTicketBooking
     
   GetHelloWorld:
     Type: AWS::Serverless::Function

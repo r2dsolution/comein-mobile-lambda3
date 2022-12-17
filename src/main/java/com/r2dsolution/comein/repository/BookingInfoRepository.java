@@ -2,6 +2,7 @@ package com.r2dsolution.comein.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -50,7 +51,8 @@ public interface BookingInfoRepository extends CrudRepository<BookingInfoM, Long
 	void resetRefBookInfo( @Param("p_owner") String owner_id , @Param("p_bookno") String bookno );
 	
 	
-	
+	@Query("select hotel_id from booking_info where owner_id = :p_owner and :p_date between checkin and checkout")
+	public Set<Long> findTopupByTourDate(@Param("p_owner") String owner_id,@Param("p_date") java.sql.Date tour_date) throws Exception;
 	
 
 	

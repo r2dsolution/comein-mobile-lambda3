@@ -10,6 +10,7 @@ import java.util.Set;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.entity.UserKYCInfoM;
+import com.r2dsolution.comein.entity.view.TourTicketView;
 
 public class ComeInMapper {
 	
@@ -43,7 +44,41 @@ public class ComeInMapper {
 		}
 		return book;
 	}
+	public static List<TourTicket> map(List<TourTicketView> list){
+		 List<TourTicket>  results = new ArrayList<TourTicket>();
+		for(TourTicketView v: list) {
+			TourTicket t = map(v);
+			results.add(t);
+		}
+		return results;
+	}
 
+	public static TourTicket map(TourTicketView v) {
+		TourTicket t = new TourTicket();
+		t.setAdultRate(v.getAdultRate());
+		t.setCancelable(v.getCancelable());
+		t.setCancelBefore(v.getCancelBefore());
+		t.setChildRate(v.getChildRate());
+		t.setCompanyId(v.getCompanyId());
+		t.setCountry(v.getCountry());
+		t.setDetail(v.getDetail());
+		t.setEndDate(dFormat.format(v.getEndDate()));
+		t.setFirstTicketId(v.getFirstTicketId());
+		t.setInventoryId(v.getInventoryId());
+		t.setProvince(v.getProvince());
+		t.setStartDate(dFormat.format(v.getStartDate()));
+		t.setTicketCode(v.getTicketCode());
+		t.setTicketCount(v.getTicketCount());
+		t.setTicketStatus(v.getTicketStatus());
+		t.setTotal(v.getTotal());
+		t.setTourDate(dFormat.format(v.getTourDate()));
+		t.setTourDesc(v.getTourDesc());
+		t.setTourId(v.getTourId());
+		t.setTourName(v.getTourName());
+		t.setTourStatus(v.getTourStatus());
+		
+		return t;
+	}
 	public static UserKYC map(UserKYCInfoM info) {
 		UserKYC kyc = new UserKYC();
 //		kyc.setEmail(info.getEmail());

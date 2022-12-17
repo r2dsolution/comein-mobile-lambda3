@@ -17,7 +17,8 @@
         <junit.platform.version>1.2.0</junit.platform.version>
         <junit.jupiter.version>5.2.0</junit.jupiter.version>
         <spring.version>5.3.9</spring.version>
-		<spring-data.version>2021.0.4</spring-data.version>
+		<!-- <spring-data.version>2021.0.4</spring-data.version-->
+		<spring-data.version>2021.2.6</spring-data.version>
 		<postgresql.version>42.3.1</postgresql.version>
 		<aws.sdk.version>1.12.48</aws.sdk.version>
 		<aws.lambda.version>1.2.1</aws.lambda.version>
