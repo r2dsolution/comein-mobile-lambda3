@@ -60,6 +60,8 @@ public class ComeInMapper {
 		t.setCancelBefore(v.getCancelBefore());
 		t.setChildRate(v.getChildRate());
 		t.setCompanyId(v.getCompanyId());
+		t.setCompanyName(v.getCompanyName());
+		t.setCompanyAddress(v.getCompanyAddress());
 		t.setCountry(v.getCountry());
 		t.setDetail(v.getDetail());
 		t.setEndDate(dFormat.format(v.getEndDate()));

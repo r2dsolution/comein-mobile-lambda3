@@ -29,6 +29,10 @@ public class TourTicketView implements Serializable{
 	
 	private Long companyId;
 	
+	private String companyName;
+	
+	private String companyAddress;
+	
 	private String tourName;
 	
 	private String tourDesc;
@@ -181,6 +185,19 @@ public class TourTicketView implements Serializable{
 	public void setTicketStatus(String ticketStatus) {
 		this.ticketStatus = ticketStatus;
 	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyAddress() {
+		return companyAddress;
+	}
+	public void setCompanyAddress(String companyAddress) {
+		this.companyAddress = companyAddress;
+	}
+	
 	
 	
 	
