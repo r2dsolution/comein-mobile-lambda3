@@ -63,17 +63,13 @@ public class SimpleQueueServiceClient {
 	public void sendMessageFIFO(AmazonSQS client,String url,String message,String groupId) {
 		String deDupId = groupId+":"+StringUtils.randomStr(20);
 		SendMessageRequest req = new SendMessageRequest();
-//		SendMessageRequest req = SendMessageRequest.builder()
-//		        .queueUrl(url)
-//		        .messageBody(message)
-//		        .messageDeduplicationId("example-group-1:1") // deduplication Id
-//		        .messageGroupId("example-group-1") // message group Id
-//		        .build();
+
 		req.withMessageBody(message);
 		req.withMessageGroupId(groupId);
 		req.withMessageDeduplicationId(deDupId);
+		req.withQueueUrl(url);
 		
-		client.sendMessage(url, message);
+		client.sendMessage(req);
 	}
 	public String urlFeedBooking(AmazonSQS sqlClient) {
 		String url = queueUrl(sqlClient, "FeedBookingQueue");
