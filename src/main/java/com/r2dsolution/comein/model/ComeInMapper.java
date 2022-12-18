@@ -9,7 +9,12 @@ import java.util.Set;
 
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
+import com.r2dsolution.comein.entity.TourBookingM;
+import com.r2dsolution.comein.entity.TourCompanyM;
+import com.r2dsolution.comein.entity.TourInfoM;
+import com.r2dsolution.comein.entity.TourTicketM;
 import com.r2dsolution.comein.entity.UserKYCInfoM;
+import com.r2dsolution.comein.entity.view.BookedTourTicketView;
 import com.r2dsolution.comein.entity.view.TourTicketView;
 
 public class ComeInMapper {
@@ -123,5 +128,60 @@ public class ComeInMapper {
 			book.getCardId().addAll(bookKycIds);
 		
 		return book;
+	}
+	public static TourTicket map(TourBookingM book,TourTicketM ticket,TourInfoM tour, TourCompanyM comp) {
+		TourTicket t = new TourTicket();
+//		t.setAdultRate(book.getAdultRate());
+//		t.setCancelable(ticket.);
+//		t.setCancelBefore(v.getCancelBefore());
+//		t.setChildRate(book.getChildRate());
+//		t.setCompanyId(comp.getId());
+//		t.setCompanyName(comp.getCompanyName());
+//		t.setCompanyAddress(comp.getAddress());
+//		t.setCountry(tour.getCountry());
+//		t.setDetail(v.getDetail());
+//		t.setEndDate(dFormat.format(v.getEndDate()));
+//		t.setFirstTicketId(v.getFirstTicketId());
+//		t.setInventoryId(v.getInventoryId());
+//		t.setProvince(tour.getProvince());
+//		t.setStartDate(dFormat.format(v.getStartDate()));
+//		t.setTicketCode(v.getTicketCode());
+//		t.setTicketCount(v.getTicketCount());
+//		t.setTicketStatus(v.getTicketStatus());
+//		t.setTotal(v.getTotal());
+//		t.setTourDate(dFormat.format(book.getTourDate()));
+//		t.setTourDesc(tour.getTourDesc());
+//		t.setTourId(tour.getId());
+//		t.setTourName(tour.getTourName());
+//		t.setTourStatus(tour.getStatus());
+		return t;
+	}
+	public static TourTicket map(BookedTourTicketView v) {
+		TourTicket t = new TourTicket();
+		t.setAdultRate(v.getAdultRate());
+		t.setCancelable(v.getCancelable());
+		t.setCancelBefore(v.getCancelBefore());
+		t.setChildRate(v.getChildRate());
+		t.setCompanyId(v.getCompanyId());
+		t.setCompanyName(v.getCompanyName());
+		t.setCompanyAddress(v.getCompanyAddress());
+		t.setCountry(v.getCountry());
+		t.setDetail(v.getDetail());
+		t.setEndDate(dFormat.format(v.getEndDate()));
+		t.setFirstTicketId(v.getFirstTicketId());
+		//t.setInventoryId(v.getInventoryId());
+		t.setProvince(v.getProvince());
+		t.setStartDate(dFormat.format(v.getStartDate()));
+		t.setTicketCode(v.getTicketCode());
+		t.setTicketCount(v.getTicketCount());
+		t.setTicketStatus(v.getTicketStatus());
+		t.setTotal(v.getTotal());
+		t.setTourDate(dFormat.format(v.getTourDate()));
+		t.setTourDesc(v.getTourDesc());
+		t.setTourId(v.getTourId());
+		t.setTourName(v.getTourName());
+		t.setTourStatus(v.getTourStatus());
+		t.setCode(v.getCode());
+		return t;
 	}
 }

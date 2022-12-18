@@ -30,6 +30,10 @@ public class DateUtils {
 			return null;
 		}
 	}
+	public static java.sql.Date nowSQLDate() {
+		Date date = nowDate();
+		return new  java.sql.Date(date.getTime());
+	}
 	public static Date nowDate() {
 		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 		return cal.getTime();
