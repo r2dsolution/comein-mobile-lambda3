@@ -58,17 +58,17 @@ public class UpdateTourTicketBookingHandler extends BaseSQSHandler{
 				String location = req.getLocation();
 				int adult = req.getAdult();
 				int child = req.getChild();
-				System.out.println("adult= "+adult+" ,child= "+child);
+				log("adult= "+adult+" ,child= "+child);
 				String remark = req.getRemark();
 				
 				String userId = req.getOwnerId();
 				String refname = req.getRefName();
 				
-				System.out.println("tour-date: "+tourDate);
+				log("tour-date: "+tourDate);
 				//TourTicketView ticket = ticketViewRepo.findByFirstTicketId(new Long(1007));
 				TourTicketView ticket = ticketViewRepo.findByTourDateAndTourId(tourDate,tourId);
 				if (ticket!=null) {
-					System.out.println("ticket-no: " +ticket.getTicketCode()+" total: "+ticket.getTicketCount());
+					log("ticket-no: " +ticket.getTicketCode()+" total: "+ticket.getTicketCount());
 					//Random r = new Random();
 					
 					
@@ -106,8 +106,8 @@ public class UpdateTourTicketBookingHandler extends BaseSQSHandler{
 						hotel = hotel.add(topup.getHotelRate());
 						comein = comein.add(topup.getComeinRate());
 					}
-					System.out.println("tour-date:"+tourDate);
-					System.out.println("hotels = "+strHotels);
+					log("tour-date:"+tourDate);
+					log("hotels = "+strHotels);
 					Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 					cal.setTime(tourDate);
 					PaymentConditionView cond = conditionRepo.findByCompanyId(companyId);
@@ -118,13 +118,13 @@ public class UpdateTourTicketBookingHandler extends BaseSQSHandler{
 					}
 					
 					java.util.Date expire = cal.getTime();
-					System.out.println("epire-date:"+expire);
+					log("epire-date:"+expire);
 					
 					bookingRepo.addTourBooking(bookno, userId, refname, location, adult, child, sell, hotel,comein, net, remark, status, tourId,strHotels, tourDate,expire);
 					int ticketSize = ticketRepo.updateBookingTicket(bookno,status,userId,tourId, tourDate);
-					System.out.println("booking: "+(adult+child)+" booked: "+ticketSize);
+					log("booking: "+(adult+child)+" booked: "+ticketSize);
 				}else {
-					System.out.println("not found ticket");
+					log("not found ticket");
 				}
 				
 			} catch(Exception ex) {

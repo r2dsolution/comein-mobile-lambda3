@@ -64,7 +64,7 @@ public class SimpleQueueServiceClient {
 		return url;
 	}
 	public String urlReserveTourBooking(AmazonSQS sqlClient) {
-		String url = queueUrl(sqlClient, "ReserveTourBookingQueue");
+		String url = queueUrl(sqlClient, "ReserveTourBookingQueue.fifo");
 		return url;
 	}
 //	public void sendFeedBooking(AmazonSQS sqlClient,String url,FeedBookingRequest book) {
