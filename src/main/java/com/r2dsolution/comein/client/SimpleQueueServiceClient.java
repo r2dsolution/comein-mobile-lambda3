@@ -22,6 +22,7 @@ import com.r2dsolution.comein.model.FeedBookingRequest;
 import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.model.HotelBookingRequest;
 import com.r2dsolution.comein.util.DateUtils;
+import com.r2dsolution.comein.util.StringUtils;
 
 @Service
 public class SimpleQueueServiceClient {
@@ -59,6 +60,21 @@ public class SimpleQueueServiceClient {
 		
 		client.sendMessage(url, message);
 	}
+	public void sendMessageFIFO(AmazonSQS client,String url,String message,String groupId) {
+		String deDupId = groupId+":"+StringUtils.randomStr(20);
+		SendMessageRequest req = new SendMessageRequest();
+//		SendMessageRequest req = SendMessageRequest.builder()
+//		        .queueUrl(url)
+//		        .messageBody(message)
+//		        .messageDeduplicationId("example-group-1:1") // deduplication Id
+//		        .messageGroupId("example-group-1") // message group Id
+//		        .build();
+		req.withMessageBody(message);
+		req.withMessageGroupId(groupId);
+		req.withMessageDeduplicationId(deDupId);
+		
+		client.sendMessage(url, message);
+	}
 	public String urlFeedBooking(AmazonSQS sqlClient) {
 		String url = queueUrl(sqlClient, "FeedBookingQueue");
 		return url;
@@ -85,6 +101,10 @@ public class SimpleQueueServiceClient {
 	public void send(AmazonSQS sqlClient,String url,Object obj) {
 		//String url = queueUrl(sqlClient, "HotelBookingQueue");
 		sendMessage(sqlClient, url, modelToMessage(obj));
+	}
+	public void sendFIFO(AmazonSQS sqlClient,String url,Object obj,String groupId) {
+		//String url = queueUrl(sqlClient, "HotelBookingQueue");
+		sendMessageFIFO(sqlClient, url, modelToMessage(obj),groupId);
 	}
 	
 	protected void sendMessage(EmailRequest req) {

@@ -44,7 +44,7 @@ public class ReserveTourBookingHandler extends BaseGateWayHandler<GateWayRequest
 		 req.setTourId(tourId);
 		 req.setBookingCode(bookingCode);
 		 
-		 client.send(sqsClient, url, req);
+		 client.sendFIFO(sqsClient, url, req,"ReserveTourBooking");
 		
 		return output;
 	}
