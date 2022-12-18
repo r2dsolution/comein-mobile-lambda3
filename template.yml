@@ -838,6 +838,68 @@ Resources:
       
 # End Function - ReserveTourBooking
 
+# Start Function - ListTourTicketByDate
+  ListTourTicketByDate:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListTourTicketByDate'
+      Handler: com.r2dsolution.comein.lambda.handler.ListTourTicketByDateHandler
+      Runtime: java11
+      Timeout: 60
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn   
+
+  ListTourTicketByDatePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ListTourTicketByDate
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ComeInRestApi}/*/POST/tour-tickets
+      
+  ListTourTicketByDateResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ParentId: !GetAtt 
+        - ComeInRestApi
+        - RootResourceId
+      PathPart: tour-tickets
+      
+  ListTourTicketByDateMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ComeInRestApi
+      ResourceId: !Ref ListTourTicketByDateResource
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ComeInAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:  !Join ['', ['arn:aws:apigateway:', !Ref AWS::Region, ':lambda:path/2015-03-31/functions/', !GetAtt ListTourTicketByDate.Arn, '/invocations']]
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates: 
+          'application/json': !Ref ComeInRequestTemplate
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              'application/json' : !Ref ComeInResponseTemplate
+      MethodResponses:
+        - StatusCode: 200
+                 
+  ListTourTicketByDateDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ListTourTicketByDateMethod
+    Properties:
+      RestApiId: !Ref ComeInRestApi 
+      
+# End Function - ListTourTicketByDate
+
 # Start Function - ListBookingByRef
   ListBookingByRef:
     Type: AWS::Serverless::Function
@@ -1074,21 +1136,6 @@ Resources:
 
 # End Function - OTABooking2HotelBooking
 
-# Start Function - ListTourTicketByDate
-  ListTourTicketByDate:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-ListTourTicketByDate'
-      Handler: com.r2dsolution.comein.lambda.handler.ListTourTicketByDateHandler
-      Runtime: java11
-      Timeout: 60
-      MemorySize: 512
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn   
-
-# End Function - ListTourTicketByDate
 
 # Start Function - UpdateTourTicketBooking
   UpdateTourTicketBooking:

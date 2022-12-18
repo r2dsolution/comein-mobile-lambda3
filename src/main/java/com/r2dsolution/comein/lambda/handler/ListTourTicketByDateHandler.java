@@ -1,5 +1,6 @@
 package com.r2dsolution.comein.lambda.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +18,27 @@ public class ListTourTicketByDateHandler extends BaseGateWayHandler<GateWayReque
 	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context)
 			throws Exception {
 		TourTicketViewRepository repo = ctx.getBean(TourTicketViewRepository.class);
-		List<TourTicketView> list = repo.findByTourDate(DateUtils.initSQLDate("2022-05-01"));
-		for(TourTicketView v: list) {
-			System.out.println("ticket id:"+v.getFirstTicketId());
-		}
+		List<TourTicketView> list  = new ArrayList<TourTicketView>();
+		String tourDateStr = (String) input.getBody().get("tour-date");
+		log("param tour-date: "+tourDateStr);
+		if (tourDateStr!=null) {
+			String province = (String) input.getBody().get("province");
+			log("param province: "+province);
+			java.sql.Date tourDate = DateUtils.initSQLDate(tourDateStr);
+			
+			if (tourDate!=null) {
+				if (province==null || province.trim().equals("")) {
+					log("search by tour-date: "+tourDate);
+					list = repo.findByTourDate(tourDate);
+				} else {
+					log("search by tour-date, province:"+province);
+				}
+				for(TourTicketView v: list) {
+					log("ticket id:"+v.getFirstTicketId());
+				}
+				
+			};
+		};
 		output.put("results", ComeInMapper.map(list));
 		return output;
 	}
