@@ -1,6 +1,6 @@
 {
 	"body":{
-		"adult":2, "child":1,"specialInst":"test-special","tourDate":"2022-05-23","tourId":1
+		"adult":2, "child":1,"special-inst":"test-special","tour-date":"2022-05-23","tour-id":1
 	},
 	"profile":{
 		"email":"tawatchr0009@gmail.com",

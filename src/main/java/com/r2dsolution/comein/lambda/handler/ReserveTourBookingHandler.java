@@ -29,7 +29,7 @@ public class ReserveTourBookingHandler extends BaseGateWayHandler<GateWayRequest
 		 String location = (String) input.getBody().get("special-inst");
 		 String remark  = "-";
 		 String tourDate = (String) input.getBody().get("tour-date");
-		 Long tourId =  (Long) input.getBody().get("tour-id");
+		 int tourId =  (int) input.getBody().get("tour-id");
 		 
 		 String bookingCode = initBookingNO();
 		 

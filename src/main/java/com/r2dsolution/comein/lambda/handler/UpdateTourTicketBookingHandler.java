@@ -51,7 +51,8 @@ public class UpdateTourTicketBookingHandler extends BaseSQSHandler{
 				
 				
 				TourBookingRequest req = mapper.readValue(body, TourBookingRequest.class);
-				Long tourId = req.getTourId();
+				int tourIdInt = req.getTourId();
+				Long tourId = new Long(tourIdInt);
 				
 				java.sql.Date tourDate = DateUtils.initSQLDate(req.getTourDate());
 				String bookno = req.getBookingCode();

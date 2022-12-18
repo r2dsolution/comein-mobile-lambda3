@@ -10,7 +10,7 @@ public class TourBookingRequest implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Long tourId;
+	private int tourId;
 	private String tourDate ;
 	private String location;
 	private int adult;
@@ -22,10 +22,10 @@ public class TourBookingRequest implements Serializable{
 	
 	private String bookingCode;
 	
-	public Long getTourId() {
+	public int getTourId() {
 		return tourId;
 	}
-	public void setTourId(Long tourId) {
+	public void setTourId(int tourId) {
 		this.tourId = tourId;
 	}
 	public String getTourDate() {
