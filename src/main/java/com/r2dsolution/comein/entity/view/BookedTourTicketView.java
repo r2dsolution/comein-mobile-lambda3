@@ -2,6 +2,7 @@ package com.r2dsolution.comein.entity.view;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -20,6 +21,9 @@ public class BookedTourTicketView implements Serializable,TicketView{
 	
 	@Id
 	private String code;
+	
+	private java.sql.Date bookingDate;
+	private Date expireDate;
 	
 	private String bookingStatus;
 	
@@ -245,6 +249,18 @@ public class BookedTourTicketView implements Serializable,TicketView{
 	}
 	public void setInventoryId(Long inventoryId) {
 		this.inventoryId = inventoryId;
+	}
+	public java.sql.Date getBookingDate() {
+		return bookingDate;
+	}
+	public void setBookingDate(java.sql.Date bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+	public Date getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(Date expireDate) {
+		this.expireDate = expireDate;
 	}
 	
 	

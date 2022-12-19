@@ -9,9 +9,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateUtils {
+	
+	public static String DATE_FORMAT = "yyyy-MM-dd";
+	public static String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	public static java.sql.Date initSQLDate(String dateStr) {
-		Date date = initDate(dateStr,"yyyy-MM-dd");
+		Date date = initDate(dateStr,DATE_FORMAT);
 		if (date!=null) {
 			return new  java.sql.Date(date.getTime());
 		}else {
@@ -43,7 +46,7 @@ public class DateUtils {
 		return new  java.sql.Timestamp(d.getTime());
 	}
 	public static Timestamp initTimestamp(String dateStr) {
-		Date date = initDate(dateStr,"yyyy-MM-dd HH:mm:ss");
+		Date date = initDate(dateStr,DATETIME_FORMAT);
 		if (date!=null) {
 			return new  java.sql.Timestamp(date.getTime());
 		}else {

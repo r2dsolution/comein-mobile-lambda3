@@ -1,5 +1,7 @@
 package com.r2dsolution.comein.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BookedTourTicket extends TourTicket{
@@ -14,6 +16,8 @@ public class BookedTourTicket extends TourTicket{
 	private String bookingStatus;
 	private int adult;
 	private int child;
+	private String bookingDate;
+	private String expireDate;
 	
 	@JsonProperty("owner-id")
 	public String getOwnerId() {
@@ -47,6 +51,20 @@ public class BookedTourTicket extends TourTicket{
 	}
 	public void setChild(int child) {
 		this.child = child;
+	}
+	@JsonProperty("booking-date")
+	public String getBookingDate() {
+		return bookingDate;
+	}
+	public void setBookingDate(String bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+	@JsonProperty("expire-date")
+	public String getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(String expireDate) {
+		this.expireDate = expireDate;
 	}
 	
 	

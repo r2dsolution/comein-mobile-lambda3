@@ -17,6 +17,7 @@ import com.r2dsolution.comein.entity.UserKYCInfoM;
 import com.r2dsolution.comein.entity.view.BookedTourTicketView;
 import com.r2dsolution.comein.entity.view.TicketView;
 import com.r2dsolution.comein.entity.view.TourTicketView;
+import com.r2dsolution.comein.util.DateUtils;
 
 public class ComeInMapper {
 	
@@ -135,6 +136,8 @@ public class ComeInMapper {
 		BookedTourTicket bt = new BookedTourTicket();
 		bt =  map((TicketView)bv,bt);
 		bt.setOwnerId(bt.getOwnerId());
+		bt.setBookingDate(DateUtils.format(bv.getBookingDate(),DateUtils.DATE_FORMAT));
+		bt.setExpireDate(DateUtils.format(bv.getExpireDate(),DateUtils.DATETIME_FORMAT));
 		bt.setReferenceName(bv.getReferenceName());
 		bt.setBookingStatus(bv.getBookingStatus());
 		bt.setAdult(bv.getAdult());
