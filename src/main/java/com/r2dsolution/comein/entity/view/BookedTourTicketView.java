@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("v_booked_ticket")
-public class BookedTourTicketView implements Serializable{
+public class BookedTourTicketView implements Serializable,TicketView{
 	/**
 	 * 
 	 */
@@ -16,15 +16,24 @@ public class BookedTourTicketView implements Serializable{
 
 	
 	private Long tourId;
+	private Long inventoryId;
 	
 	@Id
 	private String code;
 	
-	private String bookingOwner;
+	private String bookingStatus;
+	
+	private String ownerId;
+	
+	private String referenceName;
 	
 	private java.sql.Date tourDate;
 	
 	private Long total;
+	
+	private int adult;
+	
+	private int child;
 	
 	private Long ticketCount;
 	
@@ -201,12 +210,43 @@ public class BookedTourTicketView implements Serializable{
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public String getBookingOwner() {
-		return bookingOwner;
+	public String getOwnerId() {
+		return ownerId;
 	}
-	public void setBookingOwner(String bookingOwner) {
-		this.bookingOwner = bookingOwner;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
+	public String getReferenceName() {
+		return referenceName;
+	}
+	public void setReferenceName(String referenceName) {
+		this.referenceName = referenceName;
+	}
+	public String getBookingStatus() {
+		return bookingStatus;
+	}
+	public void setBookingStatus(String bookingStatus) {
+		this.bookingStatus = bookingStatus;
+	}
+	public int getAdult() {
+		return adult;
+	}
+	public void setAdult(int adult) {
+		this.adult = adult;
+	}
+	public int getChild() {
+		return child;
+	}
+	public void setChild(int child) {
+		this.child = child;
+	}
+	public Long getInventoryId() {
+		return inventoryId;
+	}
+	public void setInventoryId(Long inventoryId) {
+		this.inventoryId = inventoryId;
+	}
+	
 	
 	
 	

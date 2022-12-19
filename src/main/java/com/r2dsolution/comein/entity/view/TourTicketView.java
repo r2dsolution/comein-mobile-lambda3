@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("v_ticket")
-public class TourTicketView implements Serializable{
+public class TourTicketView implements Serializable,TicketView{
 	/**
 	 * 
 	 */

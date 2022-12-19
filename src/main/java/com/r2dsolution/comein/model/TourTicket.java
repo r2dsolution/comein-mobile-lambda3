@@ -229,7 +229,7 @@ public class TourTicket  implements Serializable{
 		this.companyName = companyName;
 	}
 	
-	@JsonProperty("company-desc")
+	@JsonProperty("company-address")
 	public String getCompanyAddress() {
 		return companyAddress;
 	}

@@ -15,6 +15,7 @@ import com.r2dsolution.comein.entity.TourInfoM;
 import com.r2dsolution.comein.entity.TourTicketM;
 import com.r2dsolution.comein.entity.UserKYCInfoM;
 import com.r2dsolution.comein.entity.view.BookedTourTicketView;
+import com.r2dsolution.comein.entity.view.TicketView;
 import com.r2dsolution.comein.entity.view.TourTicketView;
 
 public class ComeInMapper {
@@ -52,14 +53,14 @@ public class ComeInMapper {
 	public static List<TourTicket> map(List<TourTicketView> list){
 		 List<TourTicket>  results = new ArrayList<TourTicket>();
 		for(TourTicketView v: list) {
-			TourTicket t = map(v);
+			TourTicket t = map((TicketView)v, new TourTicket());
 			results.add(t);
 		}
 		return results;
 	}
 
-	public static TourTicket map(TourTicketView v) {
-		TourTicket t = new TourTicket();
+	public static <T extends TourTicket> T map(TicketView v,T t) {
+		
 		t.setAdultRate(v.getAdultRate());
 		t.setCancelable(v.getCancelable());
 		t.setCancelBefore(v.getCancelBefore());
@@ -129,59 +130,15 @@ public class ComeInMapper {
 		
 		return book;
 	}
-	public static TourTicket map(TourBookingM book,TourTicketM ticket,TourInfoM tour, TourCompanyM comp) {
-		TourTicket t = new TourTicket();
-//		t.setAdultRate(book.getAdultRate());
-//		t.setCancelable(ticket.);
-//		t.setCancelBefore(v.getCancelBefore());
-//		t.setChildRate(book.getChildRate());
-//		t.setCompanyId(comp.getId());
-//		t.setCompanyName(comp.getCompanyName());
-//		t.setCompanyAddress(comp.getAddress());
-//		t.setCountry(tour.getCountry());
-//		t.setDetail(v.getDetail());
-//		t.setEndDate(dFormat.format(v.getEndDate()));
-//		t.setFirstTicketId(v.getFirstTicketId());
-//		t.setInventoryId(v.getInventoryId());
-//		t.setProvince(tour.getProvince());
-//		t.setStartDate(dFormat.format(v.getStartDate()));
-//		t.setTicketCode(v.getTicketCode());
-//		t.setTicketCount(v.getTicketCount());
-//		t.setTicketStatus(v.getTicketStatus());
-//		t.setTotal(v.getTotal());
-//		t.setTourDate(dFormat.format(book.getTourDate()));
-//		t.setTourDesc(tour.getTourDesc());
-//		t.setTourId(tour.getId());
-//		t.setTourName(tour.getTourName());
-//		t.setTourStatus(tour.getStatus());
-		return t;
-	}
-	public static TourTicket map(BookedTourTicketView v) {
-		TourTicket t = new TourTicket();
-		t.setAdultRate(v.getAdultRate());
-		t.setCancelable(v.getCancelable());
-		t.setCancelBefore(v.getCancelBefore());
-		t.setChildRate(v.getChildRate());
-		t.setCompanyId(v.getCompanyId());
-		t.setCompanyName(v.getCompanyName());
-		t.setCompanyAddress(v.getCompanyAddress());
-		t.setCountry(v.getCountry());
-		t.setDetail(v.getDetail());
-		t.setEndDate(dFormat.format(v.getEndDate()));
-		t.setFirstTicketId(v.getFirstTicketId());
-		//t.setInventoryId(v.getInventoryId());
-		t.setProvince(v.getProvince());
-		t.setStartDate(dFormat.format(v.getStartDate()));
-		t.setTicketCode(v.getTicketCode());
-		t.setTicketCount(v.getTicketCount());
-		t.setTicketStatus(v.getTicketStatus());
-		t.setTotal(v.getTotal());
-		t.setTourDate(dFormat.format(v.getTourDate()));
-		t.setTourDesc(v.getTourDesc());
-		t.setTourId(v.getTourId());
-		t.setTourName(v.getTourName());
-		t.setTourStatus(v.getTourStatus());
-		t.setCode(v.getCode());
-		return t;
+	
+	public static BookedTourTicket map(BookedTourTicketView bv) {
+		BookedTourTicket bt = new BookedTourTicket();
+		bt =  map((TicketView)bv,bt);
+		bt.setOwnerId(bt.getOwnerId());
+		bt.setReferenceName(bv.getReferenceName());
+		bt.setBookingStatus(bv.getBookingStatus());
+		bt.setAdult(bv.getAdult());
+		bt.setChild(bv.getChild());
+		return bt;
 	}
 }
