@@ -135,6 +135,7 @@ public class ComeInMapper {
 	public static BookedTourTicket map(BookedTourTicketView bv) {
 		BookedTourTicket bt = new BookedTourTicket();
 		bt =  map((TicketView)bv,bt);
+		bt.setCode(bv.getCode());
 		bt.setOwnerId(bt.getOwnerId());
 		bt.setBookingDate(DateUtils.format(bv.getBookingDate(),DateUtils.DATE_FORMAT));
 		bt.setExpireDate(DateUtils.format(bv.getExpireDate(),DateUtils.DATETIME_FORMAT));
