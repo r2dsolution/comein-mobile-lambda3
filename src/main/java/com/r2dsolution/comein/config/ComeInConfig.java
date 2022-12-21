@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration;
@@ -45,6 +46,7 @@ import java.util.HashMap;
 @PropertySource("classpath:aws.properties")
 @ComponentScan({ "com.r2dsolution.comein.service","com.r2dsolution.comein.business","com.r2dsolution.comein.client"})
 @EnableJdbcRepositories("com.r2dsolution.comein.repository")
+@Lazy
 public class ComeInConfig extends AbstractJdbcConfiguration {   
 	
 	@Value( "${comein.db.driver}" )
@@ -80,6 +82,7 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
 	public String region;
 	
 	@Bean
+	@Lazy(true)
 	String loginAccessToken(AWSSecretsManager secretManager) {
 		Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/api/comein/login");
 		String token = awsSecrets.get("accessToken");
@@ -122,6 +125,7 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     }
     
     @Bean
+    @Lazy(true)
     AmazonSQSClientBuilder intAmazonSQSClientBuilder(AWSSecretsManager secretManager) {
     	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/sqs/comein");
     	String accessKey = awsSecrets.get("accessKey");
@@ -136,6 +140,7 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     }
     
     @Bean
+    @Lazy(true)
     AmazonSimpleEmailServiceClientBuilder initAmazonSimpleEmailServiceClientBuilder(AWSSecretsManager secretManager) {
     	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/ses/comein");
     	String accessKey = awsSecrets.get("accessKey");
@@ -151,6 +156,7 @@ public class ComeInConfig extends AbstractJdbcConfiguration {
     }
     
     @Bean
+    @Lazy(true)
     AWSCognitoIdentityProviderClientBuilder initAWSCognitoIdentityProviderClientBuilder(AWSSecretsManager secretManager) {
     	Map<String,String> awsSecrets = SecretManagerUtils.getSecret(secretManager, mode+"/cognito/comein");
     	String _accessKey = awsSecrets.get("accessKey");
