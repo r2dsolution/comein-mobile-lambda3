@@ -54,6 +54,7 @@ public class DateUtils {
 		}
 	}
 	public static String format(Date d, String format) {
+		if (d==null) return null;
 		DateFormat dFormat = new SimpleDateFormat(format,Locale.ENGLISH);
 		return dFormat.format(d);
 		
