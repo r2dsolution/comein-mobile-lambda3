@@ -18,6 +18,7 @@ public class BookedTourTicket extends TourTicket{
 	private int child;
 	private String bookingDate;
 	private String expireDate;
+	private String gatewayRef;
 	
 	@JsonProperty("owner-id")
 	public String getOwnerId() {
@@ -65,6 +66,13 @@ public class BookedTourTicket extends TourTicket{
 	}
 	public void setExpireDate(String expireDate) {
 		this.expireDate = expireDate;
+	}
+	@JsonProperty("gateway-ref")
+	public String getGatewayRef() {
+		return gatewayRef;
+	}
+	public void setGatewayRef(String gatewayRef) {
+		this.gatewayRef = gatewayRef;
 	}
 	
 	

@@ -143,6 +143,7 @@ public class ComeInMapper {
 		bt.setBookingStatus(bv.getBookingStatus());
 		bt.setAdult(bv.getAdult());
 		bt.setChild(bv.getChild());
+		bt.setGatewayRef(bv.getGatewayRef());
 		return bt;
 	}
 }

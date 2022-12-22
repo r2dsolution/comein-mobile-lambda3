@@ -31,6 +31,8 @@ public class BookedTourTicketView implements Serializable,TicketView{
 	
 	private String referenceName;
 	
+	private String gatewayRef;
+	
 	private java.sql.Date tourDate;
 	
 	private Long total;
@@ -261,6 +263,12 @@ public class BookedTourTicketView implements Serializable,TicketView{
 	}
 	public void setExpireDate(Date expireDate) {
 		this.expireDate = expireDate;
+	}
+	public String getGatewayRef() {
+		return gatewayRef;
+	}
+	public void setGatewayRef(String gatewayRef) {
+		this.gatewayRef = gatewayRef;
 	}
 	
 	
