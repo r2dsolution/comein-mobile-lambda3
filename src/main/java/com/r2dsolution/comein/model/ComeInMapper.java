@@ -144,6 +144,11 @@ public class ComeInMapper {
 		bt.setAdult(bv.getAdult());
 		bt.setChild(bv.getChild());
 		bt.setGatewayRef(bv.getGatewayRef());
+		bt.setGateway(bv.getGateway());
+		bt.setPaymentAmt(bv.getPaymentAmt());
+		bt.setPaymentDate(DateUtils.format(bv.getPaymentDate(),DateUtils.DATETIME_FORMAT));
+		bt.setPaymentStatus(bv.getPaymentStatus());
+		bt.setPaymentNO(bv.getPaymentNO());
 		return bt;
 	}
 }

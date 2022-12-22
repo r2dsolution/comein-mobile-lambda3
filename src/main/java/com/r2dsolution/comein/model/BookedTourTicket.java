@@ -1,5 +1,6 @@
 package com.r2dsolution.comein.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,6 +20,12 @@ public class BookedTourTicket extends TourTicket{
 	private String bookingDate;
 	private String expireDate;
 	private String gatewayRef;
+	
+	private String gateway;
+	private String paymentNO;
+	private String paymentDate;
+	private String paymentStatus;
+	private BigDecimal paymentAmt;
 	
 	@JsonProperty("owner-id")
 	public String getOwnerId() {
@@ -73,6 +80,46 @@ public class BookedTourTicket extends TourTicket{
 	}
 	public void setGatewayRef(String gatewayRef) {
 		this.gatewayRef = gatewayRef;
+	}
+	
+	@JsonProperty("gateway")
+	public String getGateway() {
+		return gateway;
+	}
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+	
+	@JsonProperty("payment-no")
+	public String getPaymentNO() {
+		return paymentNO;
+	}
+	public void setPaymentNO(String paymentNO) {
+		this.paymentNO = paymentNO;
+	}
+	
+	@JsonProperty("payment-date")
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+	
+	@JsonProperty("payment-status")
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+	
+	@JsonProperty("payment-amt")
+	public BigDecimal getPaymentAmt() {
+		return paymentAmt;
+	}
+	public void setPaymentAmt(BigDecimal paymentAmt) {
+		this.paymentAmt = paymentAmt;
 	}
 	
 	
