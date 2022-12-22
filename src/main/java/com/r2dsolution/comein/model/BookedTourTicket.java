@@ -26,6 +26,7 @@ public class BookedTourTicket extends TourTicket{
 	private String paymentDate;
 	private String paymentStatus;
 	private BigDecimal paymentAmt;
+	private Long paymentId;
 	
 	@JsonProperty("owner-id")
 	public String getOwnerId() {
@@ -120,6 +121,14 @@ public class BookedTourTicket extends TourTicket{
 	}
 	public void setPaymentAmt(BigDecimal paymentAmt) {
 		this.paymentAmt = paymentAmt;
+	}
+	
+	@JsonProperty("payment-id")
+	public Long getPaymentId() {
+		return paymentId;
+	}
+	public void setPaymentId(Long paymentId) {
+		this.paymentId = paymentId;
 	}
 	
 	
