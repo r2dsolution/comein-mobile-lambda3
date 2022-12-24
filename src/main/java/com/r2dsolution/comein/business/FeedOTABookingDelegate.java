@@ -22,7 +22,7 @@ import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.api.model.FeedMail;
 import com.r2dsolution.comein.api.model.FeedMessage;
-import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.client.sqs.SimpleQueueServiceClient;
 import com.r2dsolution.comein.entity.OTADailyReport;
 import com.r2dsolution.comein.model.FeedBookingRequest;
 import com.r2dsolution.comein.repository.OTADailyReportRepository;

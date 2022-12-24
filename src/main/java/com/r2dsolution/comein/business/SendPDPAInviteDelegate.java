@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.amazonaws.services.cognitoidp.model.UserType;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.client.AdminCognitoClient;
-import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.client.sqs.SimpleQueueServiceClient;
 import com.r2dsolution.comein.entity.PDPAInviteTokenM;
 import com.r2dsolution.comein.model.EmailRequest;
 import com.r2dsolution.comein.repository.PDPAInviteTokenRepository;

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.r2dsolution.comein.config.ComeInConfig;
+import com.r2dsolution.comein.config.LoadTourTicketConfig;
 import com.r2dsolution.comein.entity.view.TicketView;
 import com.r2dsolution.comein.entity.view.TourTicketView;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
@@ -15,11 +16,11 @@ import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.TourTicketViewRepository;
 import com.r2dsolution.comein.util.DateUtils;
 
-public class LoadTourTicketHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+public class LoadTourTicketHandler extends BaseGateWayHandler<LoadTourTicketConfig,GateWayRequest>{
 	
 	@Override
-	protected Class<ComeInConfig> initGateWayConfig() {
-		return ComeInConfig.class;
+	protected Class<LoadTourTicketConfig> initGateWayConfig() {
+		return LoadTourTicketConfig.class;
 	}
 
 	@Override

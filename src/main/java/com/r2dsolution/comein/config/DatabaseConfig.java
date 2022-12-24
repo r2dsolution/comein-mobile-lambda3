@@ -96,7 +96,7 @@ public class DatabaseConfig extends  AbstractJdbcConfiguration {
     
     @Bean 
     public AWSSecretsManager initAWSSecretsManager() {
-    	Regions region = Regions.AP_SOUTHEAST_1;
+    	
     	 AWSSecretsManager client  = AWSSecretsManagerClientBuilder.standard()
 					.withCredentials(initCredentialsProvider()) 
                  .withRegion(region)

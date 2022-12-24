@@ -1,4 +1,4 @@
-package com.r2dsolution.comein.client;
+package com.r2dsolution.comein.client.sqs;
 
 import java.util.Date;
 

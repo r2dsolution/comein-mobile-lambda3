@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.api.model.FeedBooking;
-import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.client.sqs.SimpleQueueServiceClient;
 import com.r2dsolution.comein.entity.OTABookingM;
 import com.r2dsolution.comein.entity.OTAMatchingRule;
 import com.r2dsolution.comein.model.HotelBooking;

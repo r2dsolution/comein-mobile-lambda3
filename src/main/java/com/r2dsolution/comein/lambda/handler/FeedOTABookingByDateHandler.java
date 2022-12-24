@@ -20,7 +20,7 @@ import com.r2dsolution.comein.api.model.FeedMail;
 import com.r2dsolution.comein.api.model.FeedMessage;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.FeedOTABookingDelegate;
-import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.client.sqs.SimpleQueueServiceClient;
 import com.r2dsolution.comein.model.FeedBookingRequest;
 
 

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.client.sqs.SimpleQueueServiceClient;
 
 @Component
 public class DailyFeedOTADelegate  extends BusinessDelegate{

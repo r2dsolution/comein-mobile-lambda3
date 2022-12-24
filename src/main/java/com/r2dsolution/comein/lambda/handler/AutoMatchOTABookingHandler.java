@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r2dsolution.comein.business.AutoMatchOTADelegate;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
-import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.client.sqs.SimpleQueueServiceClient;
 import com.r2dsolution.comein.model.AutoMatchOTARequest;
 import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.model.HotelBookingRequest;
