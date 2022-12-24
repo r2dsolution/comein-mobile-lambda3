@@ -17,11 +17,11 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.TransactionManager;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.r2dsolution.comein.repository.TourTicketViewRepository;
 import com.r2dsolution.comein.util.SecretManagerUtils;
 
 @Configuration
 @Import(DatabaseConfig.class)
-@EnableJdbcRepositories("com.r2dsolution.comein.repository.TourTicketViewRepository")
 public class ListTourTicketByDateConfig implements AbstractComeInConfiguration{   
 	
 }
