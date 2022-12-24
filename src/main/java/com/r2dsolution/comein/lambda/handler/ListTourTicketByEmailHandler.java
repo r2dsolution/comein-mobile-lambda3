@@ -14,7 +14,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.r2dsolution.comein.config.ComeInConfig;
-
+import com.r2dsolution.comein.config.ListTourTicketByEmailConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.entity.TourBookingM;
@@ -60,11 +60,11 @@ import com.r2dsolution.comein.util.DateUtils;
 //		return new GateWayResponse();
 //	}
 
-public class ListTourTicketByEmailHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+public class ListTourTicketByEmailHandler extends BaseGateWayHandler<ListTourTicketByEmailConfig,GateWayRequest>{
 	
 	@Override
-	protected Class<ComeInConfig> initGateWayConfig() {
-		return ComeInConfig.class;
+	protected Class<ListTourTicketByEmailConfig> initGateWayConfig() {
+		return ListTourTicketByEmailConfig.class;
 	}
 
 	@Override

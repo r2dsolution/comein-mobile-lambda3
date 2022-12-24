@@ -14,7 +14,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.r2dsolution.comein.config.ComeInConfig;
-
+import com.r2dsolution.comein.config.ListBookingByEmailConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
@@ -50,11 +50,11 @@ import com.r2dsolution.comein.repository.HotelRepository;
 //		return new GateWayResponse();
 //	}
 
-public class ListBookingByEmailHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+public class ListBookingByEmailHandler extends BaseGateWayHandler<ListBookingByEmailConfig,GateWayRequest>{
 	
 	@Override
-	protected Class<ComeInConfig> initGateWayConfig() {
-		return ComeInConfig.class;
+	protected Class<ListBookingByEmailConfig> initGateWayConfig() {
+		return ListBookingByEmailConfig.class;
 	}
 
 	@Override
