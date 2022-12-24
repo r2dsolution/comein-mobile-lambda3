@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
@@ -13,11 +14,12 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.r2dsolution.comein.config.AbstractComeInConfiguration;
 import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.lambda.model.GatewayResponse;
 
-public abstract class BaseGateWayHandler<T extends GateWayRequest> implements RequestHandler<T,GatewayResponse>{
+public abstract class BaseGateWayHandler<C extends AbstractComeInConfiguration,T extends GateWayRequest> implements RequestHandler<T,GatewayResponse>{
 	
 	protected ApplicationContext ctx;
 	protected LambdaLogger lambdaLogger;
@@ -30,7 +32,7 @@ public abstract class BaseGateWayHandler<T extends GateWayRequest> implements Re
 //			 mapper = new ObjectMapper();
 			 lambdaLogger = context.getLogger();
 			 
-			 ctx = new AnnotationConfigApplicationContext(ComeInConfig.class);
+			 ctx = new AnnotationConfigApplicationContext(initGateWayConfig());
 			 
 			
 	        Map<String,Object> output = new HashMap<String,Object>();
@@ -48,6 +50,7 @@ public abstract class BaseGateWayHandler<T extends GateWayRequest> implements Re
 		}
 	}
 	abstract protected Map<String, Object> doHandlerRequest(T input, Map<String, Object> output,Context context) throws Exception ;
+	abstract protected Class<C> initGateWayConfig();
 	
 	protected Map<String,String> initHeaders(){
 		Map<String, String> headers = new HashMap<>();

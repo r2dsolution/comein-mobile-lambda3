@@ -8,13 +8,19 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.ListBookingInfoByRefDelegate;
 import com.r2dsolution.comein.business.MapBookingInfoToHotelBookingDelegate;
+import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.model.HotelBooking;
 
 import reactor.core.publisher.Flux;
 
-public class ListBookingByRefHandler extends BaseGateWayHandler<GateWayRequest>{
+public class ListBookingByRefHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+	
+	@Override
+	protected Class<ComeInConfig> initGateWayConfig() {
+		return ComeInConfig.class;
+	}
 
 	@Override
 	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context) throws Exception{

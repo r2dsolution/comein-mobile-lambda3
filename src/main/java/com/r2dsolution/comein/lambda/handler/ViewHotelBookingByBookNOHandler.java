@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.HotelM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
@@ -12,7 +13,12 @@ import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.HotelRepository;
 
-public class ViewHotelBookingByBookNOHandler extends BaseGateWayHandler<GateWayRequest>{
+public class ViewHotelBookingByBookNOHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+	
+	@Override
+	protected Class<ComeInConfig> initGateWayConfig() {
+		return ComeInConfig.class;
+	}
 	
 	
 

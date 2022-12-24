@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.r2dsolution.comein.config.ListTourTicketByDateConfig;
 import com.r2dsolution.comein.entity.view.TourTicketView;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.model.ComeInMapper;
@@ -12,12 +13,13 @@ import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.TourTicketViewRepository;
 import com.r2dsolution.comein.util.DateUtils;
 
-public class ListTourTicketByDateHandler extends BaseGateWayHandler<GateWayRequest>{
+public class ListTourTicketByDateHandler extends BaseGateWayHandler<ListTourTicketByDateConfig,GateWayRequest>{
 
 	@Override
 	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context)
 			throws Exception {
 		TourTicketViewRepository repo = ctx.getBean(TourTicketViewRepository.class);
+		
 		List<TourTicketView> list  = new ArrayList<TourTicketView>();
 		String tourDateStr = (String) input.getBody().get("tour-date");
 		log("param tour-date: "+tourDateStr);
@@ -41,6 +43,11 @@ public class ListTourTicketByDateHandler extends BaseGateWayHandler<GateWayReque
 		};
 		output.put("results", ComeInMapper.map(list));
 		return output;
+	}
+
+	@Override
+	protected Class<ListTourTicketByDateConfig> initGateWayConfig() {
+		return ListTourTicketByDateConfig.class;
 	}
 
 }

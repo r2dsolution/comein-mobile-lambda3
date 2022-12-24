@@ -5,12 +5,17 @@ import java.util.Map;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.r2dsolution.comein.client.SimpleQueueServiceClient;
+import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.model.TourBookingRequest;
 import com.r2dsolution.comein.util.StringUtils;
 
-public class ReserveTourBookingHandler extends BaseGateWayHandler<GateWayRequest>{
+public class ReserveTourBookingHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
 	
+	@Override
+	protected Class<ComeInConfig> initGateWayConfig() {
+		return ComeInConfig.class;
+	}
 	
 
 	@Override

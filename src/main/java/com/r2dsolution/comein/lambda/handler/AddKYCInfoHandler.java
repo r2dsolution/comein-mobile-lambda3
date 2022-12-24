@@ -8,6 +8,7 @@ import com.amazonaws.services.cognitoidp.model.UserType;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.r2dsolution.comein.client.AdminCognitoClient;
 import com.r2dsolution.comein.cognito.model.CognitoUser;
+import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.entity.Language;
 import com.r2dsolution.comein.entity.TitleM;
@@ -17,7 +18,12 @@ import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.TitleRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
-public class AddKYCInfoHandler extends BaseGateWayHandler<GateWayRequest>{
+public class AddKYCInfoHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+	
+	@Override
+	protected Class<ComeInConfig> initGateWayConfig() {
+		return ComeInConfig.class;
+	}
 	
 	
 

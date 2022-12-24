@@ -60,7 +60,12 @@ import com.r2dsolution.comein.util.DateUtils;
 //		return new GateWayResponse();
 //	}
 
-public class ListTourTicketByEmailHandler extends BaseGateWayHandler<GateWayRequest>{
+public class ListTourTicketByEmailHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+	
+	@Override
+	protected Class<ComeInConfig> initGateWayConfig() {
+		return ComeInConfig.class;
+	}
 
 	@Override
 	protected Map<String, Object> doHandlerRequest(GateWayRequest input, Map<String, Object> output, Context context) throws Exception{

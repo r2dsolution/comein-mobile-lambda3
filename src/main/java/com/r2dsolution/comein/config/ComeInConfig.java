@@ -47,7 +47,7 @@ import java.util.HashMap;
 @ComponentScan({ "com.r2dsolution.comein.service","com.r2dsolution.comein.business","com.r2dsolution.comein.client"})
 @EnableJdbcRepositories("com.r2dsolution.comein.repository")
 @Lazy
-public class ComeInConfig extends AbstractJdbcConfiguration {   
+public class ComeInConfig extends AbstractJdbcConfiguration implements AbstractComeInConfiguration{   
 	
 	@Value( "${comein.db.driver}" )
 	public String driver;
