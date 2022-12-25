@@ -4,20 +4,21 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.r2dsolution.comein.business.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.delegate.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.delegate.ViewKycBookingDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
+import com.r2dsolution.comein.config.DeleteKYCInfoConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
-public class DeleteKYCInfoHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+public class DeleteKYCInfoHandler extends BaseGateWayHandler<DeleteKYCInfoConfig,GateWayRequest>{
 	
 	@Override
-	protected Class<ComeInConfig> initGateWayConfig() {
-		return ComeInConfig.class;
+	protected Class<DeleteKYCInfoConfig> initGateWayConfig() {
+		return DeleteKYCInfoConfig.class;
 	}
 	
 	

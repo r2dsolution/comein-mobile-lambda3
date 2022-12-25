@@ -4,8 +4,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.r2dsolution.comein.business.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.delegate.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.delegate.ViewKycBookingDelegate;
+import com.r2dsolution.comein.config.AddBookingKYCConfig;
 import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.config.ListTourTicketByDateConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
@@ -17,11 +18,11 @@ import com.r2dsolution.comein.model.HotelBooking;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 import com.r2dsolution.comein.repository.UserKYCRepository;
 
-public class AddBookingKYCHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+public class AddBookingKYCHandler extends BaseGateWayHandler<AddBookingKYCConfig,GateWayRequest>{
 	
 	@Override
-	protected Class<ComeInConfig> initGateWayConfig() {
-		return ComeInConfig.class;
+	protected Class<AddBookingKYCConfig> initGateWayConfig() {
+		return AddBookingKYCConfig.class;
 	}
 
 	@Override

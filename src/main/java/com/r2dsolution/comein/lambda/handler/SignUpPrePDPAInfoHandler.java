@@ -8,7 +8,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.CognitoUserPoolPreSignUpEvent;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
 import com.r2dsolution.comein.business.SendPDPAInviteDelegate;
-import com.r2dsolution.comein.client.AdminCognitoClient;
+import com.r2dsolution.comein.client.cognito.AdminCognitoClient;
 import com.r2dsolution.comein.lambda.model.CognitoRequest;
 
 @Component

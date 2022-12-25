@@ -1,4 +1,4 @@
-package com.r2dsolution.comein.client;
+package com.r2dsolution.comein.client.cognito;
 
 import java.util.HashSet;
 import java.util.Optional;
