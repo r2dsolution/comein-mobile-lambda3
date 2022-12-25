@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.r2dsolution.comein.business.BusinessDelegateFactory;
-import com.r2dsolution.comein.business.ViewKycBookingDelegate;
+import com.r2dsolution.comein.business.delegate.ViewKycBookingDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.entity.BookingInfoM;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;

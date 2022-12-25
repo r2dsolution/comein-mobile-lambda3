@@ -1,10 +1,11 @@
-package com.r2dsolution.comein.business;
+package com.r2dsolution.comein.business.delegate;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.r2dsolution.comein.business.BusinessDelegate;
 import com.r2dsolution.comein.repository.BookingInfoRepository;
 
 import reactor.core.publisher.Flux;

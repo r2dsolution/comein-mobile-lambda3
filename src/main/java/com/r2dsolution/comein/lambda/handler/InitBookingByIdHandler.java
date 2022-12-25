@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.r2dsolution.comein.business.BusinessDelegateFactory;
-import com.r2dsolution.comein.business.InitBookingByIdDelegate;
+import com.r2dsolution.comein.business.delegate.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.delegate.InitBookingByIdDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
+import com.r2dsolution.comein.config.InitBookingByIdConfig;
 import com.r2dsolution.comein.lambda.model.GateWayRequest;
 
-public class InitBookingByIdHandler extends BaseGateWayHandler<ComeInConfig,GateWayRequest>{
+public class InitBookingByIdHandler extends BaseGateWayHandler<InitBookingByIdConfig,GateWayRequest>{
 	
 	@Override
-	protected Class<ComeInConfig> initGateWayConfig() {
-		return ComeInConfig.class;
+	protected Class<InitBookingByIdConfig> initGateWayConfig() {
+		return InitBookingByIdConfig.class;
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.r2dsolution.comein.business.delegate.InitBookingByIdDelegate;
+import com.r2dsolution.comein.business.delegate.ViewKycBookingDelegate;
 
 @Service
 public class BusinessDelegateFactory {
