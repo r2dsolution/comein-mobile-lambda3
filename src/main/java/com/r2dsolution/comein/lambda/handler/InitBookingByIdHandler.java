@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.r2dsolution.comein.business.delegate.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.delegate.DelegateFactory;
 import com.r2dsolution.comein.business.delegate.InitBookingByIdDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.config.InitBookingByIdConfig;
@@ -22,7 +22,7 @@ public class InitBookingByIdHandler extends BaseGateWayHandler<InitBookingByIdCo
 		
 		
 		 try {
-			 BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
+			 DelegateFactory factory = ctx.getBean(DelegateFactory.class);
 			 InitBookingByIdDelegate delete = factory.initInitBookingByIdDelegate(context);
 			 
 			 List<Integer> idList = (List<Integer>) input.getBody().get("id-list");

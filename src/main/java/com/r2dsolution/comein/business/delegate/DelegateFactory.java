@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.amazonaws.services.lambda.runtime.Context;
 
 @Service
-public class BusinessDelegateFactory {
+public class DelegateFactory {
 	
 	@Autowired
 	private ViewKycBookingDelegate viewKycBookingDelegate;

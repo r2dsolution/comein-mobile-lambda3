@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.r2dsolution.comein.business.delegate.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.delegate.DelegateFactory;
 import com.r2dsolution.comein.business.delegate.ViewKycBookingDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.config.DeleteBookingKYCConfig;
@@ -43,7 +43,7 @@ public class DeleteBookingKYCHandler extends BaseGateWayHandler<DeleteBookingKYC
 			repo.save(bookInfo);
 			log("delete success");
 //			BookingInfoM result = repo.findById(bookInfo.getId()).get();
-			 BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
+			DelegateFactory factory = ctx.getBean(DelegateFactory.class);
 			 ViewKycBookingDelegate bd =  factory.initViewKycBookingDelegate(context);
 			 HotelBooking book  = bd.viewHotelBooking(bookno, ownerId);
 			//output.put("hotel-booking", result);

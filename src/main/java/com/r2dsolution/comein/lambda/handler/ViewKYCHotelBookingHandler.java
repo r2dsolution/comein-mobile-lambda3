@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.r2dsolution.comein.business.delegate.BusinessDelegateFactory;
+import com.r2dsolution.comein.business.delegate.DelegateFactory;
 import com.r2dsolution.comein.business.delegate.ViewKycBookingDelegate;
 import com.r2dsolution.comein.config.ComeInConfig;
 import com.r2dsolution.comein.config.ViewKYCHotelBookingConfig;
@@ -56,7 +56,7 @@ public class ViewKYCHotelBookingHandler extends BaseGateWayHandler<ViewKYCHotelB
 //				  
 //			 } 
 			 
-			 BusinessDelegateFactory factory = ctx.getBean(BusinessDelegateFactory.class);
+			 DelegateFactory factory = ctx.getBean(DelegateFactory.class);
 			 ViewKycBookingDelegate bd =  factory.initViewKycBookingDelegate(context);
 			 HotelBooking hotelBook  = bd.viewHotelBooking(bookNO, ownerId);
 			 
